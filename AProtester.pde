@@ -1,19 +1,30 @@
 Animation animation;
 
-float xpos = 0;
-float ypos = 0;
+import java.util.Map;
+
 PImage bg_img;
 
 int blocked = 0;
-int current_anim = 0;
+PFont text_font;
+HashMap<Integer,Integer> animations = new HashMap<Integer,Integer>();
+
+// Scene states
+float xpos = 0;
+float ypos = 0;
+int scene = 0;
+int sprite_anim = 0;
 
 void setup() {
   size(480,320);
-  ypos = height / 4 + 30;
-  orientation(LANDSCAPE);
-  bg_img = loadImage("door.png");
   frameRate(25);
+  orientation(LANDSCAPE);
+  
+  initDimensions();
+  ypos = height / 4 + 30;
+  bg_img = loadImage("door.png");
   animation = new Animation("walk", 20);
+  text_font = createFont("Serif", 24);
+  textFont(text_font);
 }
 
 void draw() {
@@ -21,27 +32,42 @@ void draw() {
   background(bg_img);
   tint(255, 220);
   
+  for (Map.Entry anim: animations.entrySet()) {
+    if ((Integer) anim.getValue() <= 0)
+      animations.remove(anim.getKey());
+    else
+      animateBG((Integer) anim.getKey());
+    animations.put((Integer) anim.getKey(), (Integer) anim.getValue() - 1);
+  }
+  
   if (blocked == 0) {
     animation.displayFirst(xpos,ypos);
     if (mousePressed) {
       if (mouseX > xpos + 480/8*3) {
-        current_anim = 1;
+        sprite_anim = WALK;
         blocked = 20;
+      }
+      else {
+        animations.put(0,30);
       }
     }
     else 
-      current_anim = 0;  
+      sprite_anim = NONE;  
   } else {
     blocked--;
     animate();
   }
 }
 
+void animateBG(Integer bg_num) {
+  text("It is happening out there.", 40, 40); 
+}
+
 void animate() {
-  switch (current_anim) {
-    case 1:
+  switch (sprite_anim) {
+    case WALK:
       animation.display(xpos,ypos);
-      xpos += 3;
+      xpos += step;
   }
 }
 

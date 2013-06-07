@@ -8,7 +8,7 @@ final int WALL = 102;
 
 public class GameState {
   int blocked = 0;
-  int cur_scene = 0;
+  String cur_scene = "";
   String cur_text;
   int text_time = 0;
 };

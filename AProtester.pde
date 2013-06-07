@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Vector;
 
 GameState game_state = new GameState();
-Vector<Scene> scenes = new Vector<Scene>();
+HashMap<String, Scene> scenes = new HashMap<String, Scene>();
 HashMap<String, Sprite> sprites = new HashMap<String,Sprite>();
 Avatar avatar;
 
@@ -15,7 +15,13 @@ void setup() {
   
   initDimensions();
   createScenes();
-  avatar = new Avatar("walk", 20, 10.0, 100.0, step, 0.0, 1.0);
+  setScene(DOOR_SCENE);
+}
+
+void setScene(String name) {
+  game_state.cur_scene = name;
+  float scale = scenes.get(name).scale;
+  avatar = new Avatar("walk", 20, 10.0 * scale , -scenes.get(name).floor + (win_height) * (1.0 - scale) + AVATAR_UP * scale, WIDTH_PER_STEP * scale * win_width / 100.0, 0.0, scale);  
 }
 
 void draw() {
@@ -36,7 +42,7 @@ void draw() {
 }
 
 void displayScene() {
-  image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
+  image(scenes.get(DOOR_SCENE).background, win_x, win_y, win_width, win_height);
 }
 
 void displayText() {

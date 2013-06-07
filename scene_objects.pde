@@ -82,7 +82,7 @@ class Avatar extends Sprite {
   }
   
   boolean isRightFrom(int _x) {
-    return (_x > (getWidth() / 2) + x + av_width);      
+    return (_x > (getWidth() + av_width) / 2 + x );      
   }
 };
 

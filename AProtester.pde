@@ -57,12 +57,12 @@ void draw() {
   // React to input / event
   if (game_state.blocked <= 0) {
     if (game_state.cur_scene.equals(CLIMB_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
-      Animation shot = new Animation("shot", 20);
-      avatar.setAnimation(shot);
-      avatar.animateOnce();
-      avatar.stopMove();
-      avatar.move(-50.0, -50.0);
-      game_state.blocked = 10000;
+        Animation shot = new Animation("shot", 20);
+        avatar.setAnimation(shot);
+        avatar.animateOnce();
+        avatar.stopMove();
+        avatar.move(-50.0,-50.0);
+        game_state.blocked = 10000;
     }
     else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {

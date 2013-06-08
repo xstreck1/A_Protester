@@ -1,3 +1,1 @@
-for i in *png; do convert $i -blur 1x2 $i; done;
-for i in *png; do convert $i -transparent white $i; done;
-for i in *png; do convert $i -blur 9x9 -paint 2 $i; done;
+for i in *png; do convert $i -negate -paint 1 -blur 0x0 -transparent black -blur 5x5 -quality 00 $i; done;

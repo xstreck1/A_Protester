@@ -6,7 +6,7 @@ final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
   scenes.put(DOOR_SCENE, new Scene(0.8, DOOR_SCENE, 10, 30, 50));
-  scenes.put(WALL_SCENE, new Scene(0.6, WALL_SCENE, 10, 20, 40));
+  scenes.put(WALL_SCENE, new Scene(0.75, WALL_SCENE, 10, 20, 40));
   scenes.put(CLIMB_SCENE, new Scene(0.82, CLIMB_SCENE, 10, 20, 40));
 }
 

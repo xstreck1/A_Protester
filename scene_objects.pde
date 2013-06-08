@@ -17,7 +17,7 @@ class Animation {
   void display(int frame, float xpos, float ypos, float scale) {
     float my_width = Math.round(images[0].width * scale);
     float my_height = Math.round(images[0].height * scale);
-    println(xpos + " " + ypos + " " + my_width + " " + my_height);
+    // println(xpos + " " + ypos + " " + my_width + " " + my_height);
     image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
@@ -126,29 +126,5 @@ class Avatar extends Sprite {
   
   int getAvWidth() {
     return Math.round(av_width);
-  }
-};
-
-public class Scene {
-  float scale;
-  PImage background;
-  int floor;
-  int left_border;
-  int right_border;
-  
-  Scene(float _scale, String _bg_image, int _floor, int _left_border, int _right_border) {
-    scale = _scale;
-    background = loadImage(_bg_image + ".png");
-    floor = _floor;
-    left_border = _left_border;
-    right_border = _right_border;
-  }
-  
-  int getRightBorder() {
-    return right_border;
-  }
-  
-  int getLeftBorder() {
-    return right_border;
   }
 };

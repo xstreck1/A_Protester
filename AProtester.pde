@@ -16,9 +16,9 @@ Animation walk;
 void setup() {
 
   size(480, 320);
-  // size(800,600);
+  // size(800, 600);
   frameRate(25);
-  orientation(LANDSCAPE);
+  // orientation(LANDSCAPE);
 
   initDimensions();
   createScenes();
@@ -53,40 +53,56 @@ void draw() {
   displayText();
   displaySprites();
   avatar.display();
+  reactToEvents();
+  controlFading();
+}
 
+void reactToEvents() {
   // React to input / event
   if (game_state.blocked <= 0) {
     if (game_state.cur_scene.equals(CLIMB_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
-        Animation shot = new Animation("shot", 20);
-        avatar.setAnimation(shot);
-        avatar.animateOnce();
-        avatar.stopMove();
-        avatar.move(-50.0,-50.0);
-        game_state.blocked = 10000;
-    }
-    else if (mousePressed) {
+      Animation shot = new Animation("shot", 20);
+      avatar.setAnimation(shot);
+      avatar.animateOnce();
+      avatar.stopMove();
+      avatar.move(-50.0, -50.0);
+      game_state.blocked = 10000;
+    } else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
         game_state.blocked = avatar.getCount();
-      } 
-      else if (avatar.isLeftFrom(mouseX)) {
+      } else if (avatar.isLeftFrom(mouseX)) {
         game_state.cur_text = "There is no way back.";
         game_state.text_time = 30;
       }
     }
-  } 
-  else {
+    // Control scene change.
+    if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {
+      game_state.to_change = SECOND;
+      game_state.blocked = SECOND * 2;
+    }
+  } else {
     game_state.blocked--;
-  }
+  }  
+}
 
-  // Control scene change.
-  if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {
+void controlFading() {
+  if (game_state.to_change > 0) {
+  fill(0, (255 / SECOND) * (SECOND - game_state.to_change));
+  rect(win_x, win_y, win_width, win_height);
+  if (--game_state.to_change <= 0) {
     setScene(nextScene(game_state.cur_scene));
+      game_state.to_begin = SECOND;
+    }
+  }
+  if (--game_state.to_begin > 0) {
+    fill(0, (255 / SECOND) * (game_state.to_begin));
+    rect(win_x, win_y, win_width, win_height);
   }
 }
 
 void displayScene() {
-  background(255, 255, 255);
+  background(0, 0, 0);
   image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
 }
 

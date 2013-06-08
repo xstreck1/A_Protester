@@ -6,26 +6,28 @@ import java.util.Vector;
 
 GameState game_state = new GameState();
 HashMap<String, Scene> scenes = new HashMap<String, Scene>();
-HashMap<String, Sprite> sprites = new HashMap<String,Sprite>();
+HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
 Avatar avatar;
+Animation walk; 
 
 /* AudioPlayer player;
-Minim minim; */
+ Minim minim; */
 
 void setup() {
-  
-  size(480,320);
-  // size(800,600);
+
+  // size(480, 320);
+  size(800,600);
   frameRate(25);
   // orientation(LANDSCAPE);
-  
+
   initDimensions();
   createScenes();
+  walk = new Animation("walk", 20); 
   setScene(DOOR_SCENE);
-  
+
   /* minim = new Minim(this);
-  player = minim.loadFile("bg_music.mp3", 2048);
-  player.play(); */
+   player = minim.loadFile("bg_music.mp3", 2048);
+   player.play(); */
 }
 
 void setupFont() {
@@ -42,7 +44,7 @@ void setScene(String name) {
   float av_y = -scenes.get(name).floor + (PURPOSED_HEIGHT) * (1.0 - scale) + AVATAR_UP * scale; // Adjust to uplift of the sprite, the floor height and scaling of the picture w.r.t. the original assumption.
   float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0;
   float d_y = 0.0;
-  avatar = new Avatar("walk", 20,  av_x, av_y, d_x, d_y, av_width, scale);
+  avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
 }
 
 void draw() {
@@ -55,7 +57,8 @@ void draw() {
   // React to input / event
   if (game_state.blocked <= 0) {
     if (game_state.cur_scene.equals(CLIMB_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
-        avatar.setAnimation("shot", 20);
+        Animation shot = new Animation("shot", 20);
+        avatar.setAnimation(shot);
         avatar.animateOnce();
         avatar.stopMove();
         avatar.move(-50.0,-50.0);
@@ -65,23 +68,25 @@ void draw() {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
         game_state.blocked = avatar.getCount();
-      } else if (avatar.isLeftFrom(mouseX)) {
+      } 
+      else if (avatar.isLeftFrom(mouseX)) {
         game_state.cur_text = "There is no way back.";
         game_state.text_time = 30;
       }
     }
-  } else {
+  } 
+  else {
     game_state.blocked--;
   }
-  
+
   // Control scene change.
   if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {
-    setScene(nextScene(game_state.cur_scene));  
+    setScene(nextScene(game_state.cur_scene));
   }
 }
 
 void displayScene() {
-  background(255,255,255);
+  background(255, 255, 255);
   image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
 }
 
@@ -91,15 +96,16 @@ void displayText() {
     textSize(font_size);
     float text_width = textWidth(game_state.cur_text);
     float x_coord = (win_width - text_width) / 2 + win_x;
-    text(game_state.cur_text, x_coord, text_y); 
+    text(game_state.cur_text, x_coord, text_y);
   }
 }
 
 void displaySprites() {
   for (Map.Entry sprite: sprites.entrySet()) {
-      ((Sprite) sprite.getValue()).display();
+    ((Sprite) sprite.getValue()).display();
   }
 }
+
 // Sprite animation states
 final int NONE = 1;
 final int WALK = 2;
@@ -147,8 +153,8 @@ void setWindow() {
     win_width = Math.round(PURPOSED_WIDTH * ratio);
     win_x = (width - win_width) / 2;
   }
-  print (width + " " + height + "\n");
-  print (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
+  println (width + " " + height );
+  println (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
   text_y = Math.round((float) PURPOSED_TEXT_LINE * ratio) + win_y;
   font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
 }
@@ -157,40 +163,26 @@ void setWindow() {
 class Animation {
   PImage[] images;
   int image_count;
-  int frame;
-  float scale;
-  int my_width;
-  int my_height;
   
-  Animation(String _name, int _image_count, float _scale) {
-    image_count = _image_count;
-    images = new PImage[_image_count];
-    scale = _scale;
-    my_width = Math.round(PURPOSED_WIDTH * scale * ratio);
-    my_height = Math.round(PURPOSED_HEIGHT * scale * ratio);
-
-    setAnimation(_name, _image_count);
-  }
-  
-  void setAnimation(String _name, int _image_count) {
+  Animation(String _name, int _image_count) {
     image_count = _image_count;
     images = new PImage[_image_count]; 
  
      for (int i = 0; i < image_count; i++) {
       String filename = _name + nf(i, 2) + ".png";
       images[i] = loadImage(filename);
-    }   
+    }
   }
 
-  void display(float xpos, float ypos, boolean animate) {
-    if (animate) {
-      frame = (frame+1) % image_count;
-    }
+  void display(int frame, float xpos, float ypos, float scale) {
+    float my_width = Math.round(images[0].width * scale);
+    float my_height = Math.round(images[0].height * scale);
+    println(xpos + " " + ypos + " " + my_width + " " + my_height);
     image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
   int getWidth() {
-    return my_width;
+    return images[0].width;
   }
   
   int getCount() {
@@ -198,46 +190,60 @@ class Animation {
   }
 };
 
-class Sprite extends Animation {
+class Sprite {
+  int frame;
   float x;
   float y;
   float d_x;
   float d_y;
+  float scale;
   int animation_steps;
+  Animation animation;
   
   void display() {
     if (animation_steps > 0) {
-      display(x,y,true);
       animation_steps--;
+      frame = (frame + 1) % animation.getCount();
       x += d_x;
       y += d_y;
-    } else if (animation_steps == 0) {
-      display(x,y,false);
-    } else {
-      display(x,y,true);
-    }
+    } 
+    animation.display(frame,x,y,scale);
   }
   
-  Sprite(String _name, int _count, float _x, float _y,  float _d_x, float _d_y, float _scale) {
-    super(_name, _count, _scale);
+  Sprite(Animation _animation, float _x, float _y,  float _d_x, float _d_y, float _scale) {
+    animation = _animation;
+    frame = 0;
     x = _x * ratio + win_x;
     y = _y * ratio + win_y;
     d_x = _d_x * ratio;
     d_y = _d_y * ratio;
+    scale = _scale * ratio;
+  }
+  
+  void setAnimation(Animation _animation) {
+    animation = _animation;
   }
   
   void startAnim(int iterations) {
     frame = 0;
-    animation_steps = iterations * image_count;
+    animation_steps = iterations * getCount();
   }
   
   void animateOnce() {
     frame = 0;
-    animation_steps = image_count - 1;
+    animation_steps = getCount() - 1;
+  }
+  
+  int getCount() {
+    return animation.getCount();
   }
   
   void stopAnim() {
     animation_steps = 0;
+  }
+  
+  void reset() {
+    frame = 0;
   }
   
   void stopMove() {
@@ -251,19 +257,23 @@ class Sprite extends Animation {
   float getY() {
     return y;
   }
+  
+  float getWidth() {
+    return (animation.getWidth() * scale);
+  }
 };
 
 class Avatar extends Sprite {
   float av_width;
   
-  Avatar(String _image_prefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _av_width, float _scale) {
-    super(_image_prefix, _count, _x, _y, _d_x, _d_y, _scale);
+  Avatar(Animation animation, float _x, float _y,  float _d_x, float _d_y, float _scale, float _av_width) {
+    super(animation, _x, _y, _d_x, _d_y, _scale);
     av_width = _av_width;
   }
   
   void move(float _x, float _y) {
-    x += _x * scale * ratio;
-    y += _y * scale * ratio;
+    x += _x * scale;
+    y += _y * scale;
   }
   
   boolean isRightFrom(int _x) {

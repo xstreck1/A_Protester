@@ -5,30 +5,33 @@ class Animation {
   int image_count;
   int frame;
   float scale;
+  int my_width;
+  int my_height;
   
   Animation(String _name, int _image_count, float _scale) {
     image_count = _image_count;
     images = new PImage[_image_count];
     scale = _scale;
+    my_width = Math.round(PURPOSED_WIDTH * scale * ratio);
+    my_height = Math.round(PURPOSED_HEIGHT * scale * ratio);
 
     for (int i = 0; i < image_count; i++) {
       String filename = _name + nf(i, 2) + ".png";
       images[i] = loadImage(filename);
-      images[i].resize(Math.round(images[i].width * _scale * ratio), 0);
     }
   }
 
   void display(float xpos, float ypos, boolean animate) {
     if (animate) {
       frame = (frame+1) % image_count;
-      image(images[frame], xpos, ypos);
+      image(images[frame], xpos, ypos, my_width, my_height);
     } else {
-      image(images[0], xpos, ypos);
+      image(images[0], xpos, ypos, my_width, my_height);
     }
   }
   
   int getWidth() {
-    return images[0].width;
+    return my_width;
   }
   
   int getCount() {

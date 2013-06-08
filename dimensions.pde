@@ -30,6 +30,7 @@ void setWindow() {
     win_width = Math.round(PURPOSED_WIDTH * ratio);
     win_x = (width - win_width) / 2;
   }
+  print (width + " " + height + "\n");
   print (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
   text_y = Math.round((float) PURPOSED_TEXT_LINE * ratio) + win_y;
   font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);

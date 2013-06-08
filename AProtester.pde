@@ -1,5 +1,6 @@
 Animation animation;
 
+// import ddf.minim.*;
 import java.util.Map;
 import java.util.Vector;
 
@@ -8,15 +9,23 @@ HashMap<String, Scene> scenes = new HashMap<String, Scene>();
 HashMap<String, Sprite> sprites = new HashMap<String,Sprite>();
 Avatar avatar;
 
+/* AudioPlayer player;
+Minim minim; */
+
 void setup() {
+  
   size(480,320);
   // size(800,600);
   frameRate(25);
-  // orientation(LANDSCAPE);
+  orientation(LANDSCAPE);
   
   initDimensions();
   createScenes();
   setScene(DOOR_SCENE);
+  
+  /* minim = new Minim(this);
+  player = minim.loadFile("bg_music.mp3", 2048);
+  player.play(); */
 }
 
 void setupFont() {
@@ -66,6 +75,7 @@ void draw() {
 }
 
 void displayScene() {
+  background(255,255,255);
   image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
 }
 

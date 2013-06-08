@@ -49,13 +49,19 @@ void draw() {
   // Display objects.
   displayScene();
   displayText();
-  tint(255, 220);
   displaySprites();
   avatar.display();
 
-  // React to input.
+  // React to input / event
   if (game_state.blocked <= 0) {
-    if (mousePressed) {
+    if (game_state.cur_scene.equals(CLIMB_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
+        avatar.setAnimation("shot", 20);
+        avatar.animateOnce();
+        avatar.stopMove();
+        avatar.move(-50.0,-50.0);
+        game_state.blocked = 10000;
+    }
+    else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
         game_state.blocked = avatar.getCount();
@@ -75,6 +81,7 @@ void draw() {
 }
 
 void displayScene() {
+  background(255,255,255);
   image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
 }
 
@@ -152,32 +159,38 @@ class Animation {
   int image_count;
   int frame;
   float scale;
+  int my_width;
+  int my_height;
   
   Animation(String _name, int _image_count, float _scale) {
     image_count = _image_count;
     images = new PImage[_image_count];
     scale = _scale;
+    my_width = Math.round(PURPOSED_WIDTH * scale * ratio);
+    my_height = Math.round(PURPOSED_HEIGHT * scale * ratio);
 
-    for (int i = 0; i < image_count; i++) {
+    setAnimation(_name, _image_count);
+  }
+  
+  void setAnimation(String _name, int _image_count) {
+    image_count = _image_count;
+    images = new PImage[_image_count]; 
+ 
+     for (int i = 0; i < image_count; i++) {
       String filename = _name + nf(i, 2) + ".png";
       images[i] = loadImage(filename);
-      int new_width = Math.round(PURPOSED_WIDTH * scale * ratio);
-      int new_height = Math.round(PURPOSED_HEIGHT * scale * ratio);
-      images[i].resize(new_width, new_height);
-    }
+    }   
   }
 
   void display(float xpos, float ypos, boolean animate) {
     if (animate) {
       frame = (frame+1) % image_count;
-      image(images[frame], xpos, ypos);
-    } else {
-      image(images[0], xpos, ypos);
     }
+    image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
   int getWidth() {
-    return images[0].width;
+    return my_width;
   }
   
   int getCount() {
@@ -214,24 +227,43 @@ class Sprite extends Animation {
   }
   
   void startAnim(int iterations) {
+    frame = 0;
     animation_steps = iterations * image_count;
+  }
+  
+  void animateOnce() {
+    frame = 0;
+    animation_steps = image_count - 1;
   }
   
   void stopAnim() {
     animation_steps = 0;
   }
   
-  int getX() {
-    return Math.round(x);
+  void stopMove() {
+    d_x = d_y = 0;
+  }
+  
+  float getX() {
+    return x;
+  }
+  
+  float getY() {
+    return y;
   }
 };
 
 class Avatar extends Sprite {
   float av_width;
   
-  Avatar(String _imagePrefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _av_width, float _scale) {
-    super(_imagePrefix, _count, _x, _y, _d_x, _d_y, _scale);
+  Avatar(String _image_prefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _av_width, float _scale) {
+    super(_image_prefix, _count, _x, _y, _d_x, _d_y, _scale);
     av_width = _av_width;
+  }
+  
+  void move(float _x, float _y) {
+    x += _x * scale * ratio;
+    y += _y * scale * ratio;
   }
   
   boolean isRightFrom(int _x) {
@@ -278,7 +310,7 @@ final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
   scenes.put(DOOR_SCENE, new Scene(0.8, DOOR_SCENE, 10, 30, 50));
-  scenes.put(WALL_SCENE, new Scene(0.6, WALL_SCENE, 10, 20, 40));
+  scenes.put(WALL_SCENE, new Scene(0.75, WALL_SCENE, 10, 20, 40));
   scenes.put(CLIMB_SCENE, new Scene(0.82, CLIMB_SCENE, 10, 20, 40));
 }
 

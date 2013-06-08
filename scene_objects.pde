@@ -5,87 +5,122 @@ class Animation {
   int image_count;
   int frame;
   float scale;
-  int my_width;
-  int my_height;
   
-  Animation(String _name, int _image_count, float _scale) {
+  Animation(String _name, int _image_count) {
     image_count = _image_count;
-    images = new PImage[_image_count];
-    scale = _scale;
-    my_width = Math.round(PURPOSED_WIDTH * scale * ratio);
-    my_height = Math.round(PURPOSED_HEIGHT * scale * ratio);
-
-    for (int i = 0; i < image_count; i++) {
+    images = new PImage[_image_count]; 
+ 
+     for (int i = 0; i < image_count; i++) {
       String filename = _name + nf(i, 2) + ".png";
       images[i] = loadImage(filename);
-    }
+    }  
   }
 
-  void display(float xpos, float ypos, boolean animate) {
+  void display(float xpos, float ypos, float scale, boolean animate) {
     if (animate) {
       frame = (frame+1) % image_count;
-      image(images[frame], xpos, ypos, my_width, my_height);
-    } else {
-      image(images[0], xpos, ypos, my_width, my_height);
     }
+    float my_width = Math.round(images[0].width * scale);
+    float my_height = Math.round(images[0].height * scale);
+    println(xpos + " " + ypos + " " + my_width + " " + my_height);
+    image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
   int getWidth() {
-    return my_width;
+    return images[0].width;
   }
   
   int getCount() {
     return image_count;
   }
+  
+  void reset() {
+    frame = 0;
+  }
 };
 
-class Sprite extends Animation {
+class Sprite {
   float x;
   float y;
   float d_x;
   float d_y;
+  float scale;
   int animation_steps;
+  Animation animation;
   
   void display() {
     if (animation_steps > 0) {
-      display(x,y,true);
+      animation.display(x,y,scale,true);
       animation_steps--;
       x += d_x;
       y += d_y;
     } else if (animation_steps == 0) {
-      display(x,y,false);
+      animation.display(x,y,scale,false);
     } else {
-      display(x,y,true);
+      animation.display(x,y,scale,true);
     }
   }
   
-  Sprite(String _name, int _count, float _x, float _y,  float _d_x, float _d_y, float _scale) {
-    super(_name, _count, _scale);
+  Sprite(Animation _animation, float _x, float _y,  float _d_x, float _d_y, float _scale) {
+    animation = _animation;
+    animation.reset();
     x = _x * ratio + win_x;
     y = _y * ratio + win_y;
     d_x = _d_x * ratio;
     d_y = _d_y * ratio;
+    scale = _scale * ratio;
+  }
+  
+  void setAnimation(Animation _animation) {
+    animation = _animation;
   }
   
   void startAnim(int iterations) {
-    animation_steps = iterations * image_count;
+    animation.frame = 0;
+    animation_steps = iterations * getCount();
+  }
+  
+  void animateOnce() {
+    animation.frame = 0;
+    animation_steps = getCount() - 1;
   }
   
   void stopAnim() {
     animation_steps = 0;
   }
   
-  int getX() {
-    return Math.round(x);
+  void stopMove() {
+    d_x = d_y = 0;
+  }
+  
+  float getX() {
+    return x;
+  }
+  
+  float getY() {
+    return y;
+  }
+  
+  int getCount() {
+    return animation.getCount();
+  }
+  
+  float getWidth() {
+    return (animation.getWidth() * scale);
   }
 };
 
 class Avatar extends Sprite {
   float av_width;
   
-  Avatar(String _imagePrefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _av_width, float _scale) {
-    super(_imagePrefix, _count, _x, _y, _d_x, _d_y, _scale);
+  Avatar(Animation _animation, float _x, float _y,  float _d_x, float _d_y, float _scale, float _av_width) {
+    super(_animation, _x, _y, _d_x, _d_y, _scale);
     av_width = _av_width;
+  }
+  
+  void move(float _x, float _y) {
+    x += _x * scale;
+    y += _y * scale;
   }
   
   boolean isRightFrom(int _x) {

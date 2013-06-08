@@ -1,13 +1,17 @@
 final int PURPOSED_WIDTH = 480;
 final int PURPOSED_HEIGHT = 320;
+
 final float AVATAR_UP = 52.0;
+final float AVATAR_WIDHT = 30.0;
 int win_width = 0;
 int win_height = 0;
 int win_x = 0;
 int win_y = 0;
 float ratio = 0.0;
 
-float TEXT_Y_INDENT = 0.05;
+final int PURPOSED_FONT_SIZE = 32;
+int font_size = 0;
+final int PURPOSED_TEXT_LINE = 50;
 int text_y = 0;
 
 void initDimensions () {
@@ -27,4 +31,6 @@ void setWindow() {
     win_x = (width - win_width) / 2;
   }
   print (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
+  text_y = Math.round((float) PURPOSED_TEXT_LINE * ratio) + win_y;
+  font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
 }

@@ -14,7 +14,7 @@ class Animation {
     for (int i = 0; i < image_count; i++) {
       String filename = _name + nf(i, 2) + ".png";
       images[i] = loadImage(filename);
-      images[i].resize(Math.round(images[i].width * _scale), 0);
+      images[i].resize(Math.round(images[i].width * _scale * ratio), 0);
     }
   }
 
@@ -58,10 +58,10 @@ class Sprite extends Animation {
   
   Sprite(String _name, int _count, float _x, float _y,  float _d_x, float _d_y, float _scale) {
     super(_name, _count, _scale);
-    x = _x;
-    y = _y;
-    d_x = _d_x;
-    d_y = _d_y;
+    x = _x * ratio + win_x;
+    y = _y * ratio + win_y;
+    d_x = _d_x * ratio;
+    d_y = _d_y * ratio;
   }
   
   void startAnim(int iterations) {
@@ -71,18 +71,30 @@ class Sprite extends Animation {
   void stopAnim() {
     animation_steps = 0;
   }
+  
+  int getX() {
+    return Math.round(x);
+  }
 };
 
 class Avatar extends Sprite {
   float av_width;
   
-  Avatar(String _imagePrefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _scale) {
+  Avatar(String _imagePrefix, int _count, float _x, float _y,  float _d_x, float _d_y, float _av_width, float _scale) {
     super(_imagePrefix, _count, _x, _y, _d_x, _d_y, _scale);
-    av_width = _scale * 30;
+    av_width = _av_width;
   }
   
   boolean isRightFrom(int _x) {
     return (_x > (getWidth() + av_width) / 2 + x );      
+  }
+  
+  boolean isLeftFrom(int _x) {
+    return (_x < (getWidth() - av_width) / 2 + x );      
+  }
+  
+  int getAvWidth() {
+    return Math.round(av_width);
   }
 };
 
@@ -90,10 +102,22 @@ public class Scene {
   float scale;
   PImage background;
   int floor;
+  int left_border;
+  int right_border;
   
-  Scene(float _scale, String _bg_image, int _floor) {
+  Scene(float _scale, String _bg_image, int _floor, int _left_border, int _right_border) {
     scale = _scale;
-    background = loadImage(_bg_image);
+    background = loadImage(_bg_image + ".png");
     floor = _floor;
+    left_border = _left_border;
+    right_border = _right_border;
+  }
+  
+  int getRightBorder() {
+    return right_border;
+  }
+  
+  int getLeftBorder() {
+    return right_border;
   }
 };

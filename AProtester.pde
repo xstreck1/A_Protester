@@ -20,14 +20,14 @@ PImage no_sound;
 
 void setup() {
 
-  size(480, 320);
-  // size(800, 600);
+  // size(480, 320);
+  size(800, 600);
   frameRate(25);
   orientation(LANDSCAPE);
 
   initialize();
   game_state.scene_type = HOME;
-  game_state.cur_scene = 6;
+  game_state.cur_scene = 0;
   setScene();
 
   /* minim = new Minim(this);
@@ -46,7 +46,12 @@ void draw() {
     if (sound)
       image(no_sound, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
     else
-      image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));    
+      image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+    fill(0,255);
+    rect(0,0, win_x,win_height);
+    rect(0,0, win_width,win_y);    
+    rect(win_x + win_width, 0, win_x,win_height);
+    rect(0,win_y + win_height, win_width,win_y);   
   } else {
     --game_state.dont_draw;
   }
@@ -86,14 +91,10 @@ void reactToEvents() {
   }
 }
 
-void mouseClicked() {
+void reactToMouse() {
   if (mouseX > win_x && mouseX < (win_x + Math.round(50.0 * ratio)) && mouseY < win_height + win_y && mouseY  > win_height + win_y - Math.round(50.0 * ratio)) {
     sound = !sound;
-  }  
-}
-
-void reactToMouse() {
-  if (avatar.isRightFrom(mouseX)) {
+  } else if (avatar.isRightFrom(mouseX)) {
     avatar.startAnim(1);
     game_state.blocked = avatar.getCount();
   } else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {

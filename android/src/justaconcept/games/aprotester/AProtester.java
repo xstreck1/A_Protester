@@ -1,13 +1,13 @@
-package processing.test.aprotester;
+package justaconcept.games.aprotester;
 
 import java.util.Vector;
 
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
+import processing.test.aprotester.R;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 
 public class AProtester extends PApplet {
 
@@ -19,13 +19,13 @@ public class AProtester extends PApplet {
     Vector<Scene> scenes = new Vector<Scene>();
     Vector<Bystander> bystanders = new Vector<Bystander>();
     Vector<BystanderData> bystanders_data = new Vector<BystanderData>();
+    MediaPlayer media_player;
     Avatar avatar;
     Animation walk;
     Animation walkw;
-
-    /*
-     * AudioPlayer player; Minim minim;
-     */
+    boolean sound;
+    PImage sound_im;
+    PImage no_sound;
 
     public void setup() {
 
@@ -37,11 +37,14 @@ public class AProtester extends PApplet {
 	game_state.scene_type = HOME;
 	game_state.cur_scene = 0;
 	setScene();
+    }
 
-	/*
-	 * minim = new Minim(this); player = minim.loadFile("bg_music.mp3",
-	 * 2048); player.play();
-	 */
+    public void startMusic() {
+	media_player = MediaPlayer.create(getApplicationContext(), R.raw.background);
+	media_player.setLooping(true);
+	media_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	if (sound)
+	    media_player.start();
     }
 
     public void draw() {
@@ -52,6 +55,16 @@ public class AProtester extends PApplet {
 	    tint(255, 255);
 	    avatar.display();
 	    displayText();
+	    if (sound)
+		image(no_sound, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+	    else
+		image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+
+	    fill(0, 255);
+	    rect(0, 0, win_x, win_height);
+	    rect(0, 0, win_width, win_y);
+	    rect(win_x + win_width, 0, win_x, win_height);
+	    rect(0, win_y + win_height, win_width, win_y);
 	} else {
 	    --game_state.dont_draw;
 	}
@@ -93,8 +106,14 @@ public class AProtester extends PApplet {
 	}
     }
 
-    public void reactToMouse() {
-	if (avatar.isRightFrom(mouseX)) {
+    void reactToMouse() {
+	if (mouseX > win_x && mouseX < (win_x + Math.round(50.0 * ratio)) && mouseY < win_height + win_y && mouseY > win_height + win_y - Math.round(50.0 * ratio)) {
+	    sound = !sound;
+	    if (sound) {
+		media_player.start();
+	    } else
+		media_player.pause();
+	} else if (avatar.isRightFrom(mouseX)) {
 	    avatar.startAnim(1);
 	    game_state.blocked = avatar.getCount();
 	} else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
@@ -102,6 +121,9 @@ public class AProtester extends PApplet {
 	    if (texts.get(game_state.scene_type - 1).size() > 1)
 		texts.get(game_state.scene_type - 1).remove(0);
 	    game_state.text_time = SECOND;
+	}
+	if (game_state.finished) {
+	    finish();
 	}
     }
 
@@ -131,6 +153,7 @@ public class AProtester extends PApplet {
 	int to_end = 0;
 	int no_of_sprites = 0;
 	int frame = 0;
+	boolean finished = false;
     };
 
     Vector<Vector<String>> texts = new Vector<Vector<String>>();
@@ -305,6 +328,10 @@ public class AProtester extends PApplet {
 	} else {
 	    textOut(5.0f, "Public Attention May Prevent Violence");
 	}
+
+	if (game_state.to_end == 1) {
+	    game_state.finished = true;
+	}
     }
 
     public void textOut(float position, String text) {
@@ -320,14 +347,10 @@ public class AProtester extends PApplet {
 	initBystanders();
 	walk = new Animation("walk", 20);
 	walkw = new Animation("walkw", 20);
+	sound_im = loadImage("sound.png");
+	no_sound = loadImage("nosound.png");
+	sound = true;
 	startMusic();
-    }
-
-    public void startMusic() {
-	MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.gun);
-	mediaPlayer.setLooping(true);
-	mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-	mediaPlayer.start();
     }
 
     public void setupFont() {
@@ -627,6 +650,12 @@ public class AProtester extends PApplet {
 	avatar.move(-50.0f, -50.0f);
 	game_state.blocked = SECOND * 8;
 	game_state.to_mist = SECOND * 8;
+	if (sound) {
+	    MediaPlayer shot_player;
+	    shot_player = MediaPlayer.create(getApplicationContext(), R.raw.gun);
+	    shot_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	    shot_player.start();
+	}
     }
 
     public void setUpTheFall() {

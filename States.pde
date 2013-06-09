@@ -26,6 +26,7 @@ public class GameState {
   int to_end = 0;
   int no_of_sprites = 0;
   int frame = 0;
+  boolean finished = false;
 };
 
 Vector< Vector < String > > texts = new Vector< Vector < String > >();

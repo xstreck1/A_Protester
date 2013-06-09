@@ -96,6 +96,10 @@ void showEnd() {
   } else {
     textOut(5.0, "Public Attention May Prevent Violence");
   }
+  
+  if (game_state.to_end == 1) {
+    game_state.finished = true;
+  }
 }
 
 void textOut(float position, String text) {

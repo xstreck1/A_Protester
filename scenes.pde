@@ -6,10 +6,10 @@ final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 void createScenes() {
   scenes = new Vector<Scene>();
   scenes.add(new Scene(0, 0.95, 10, 30, 60, 0));
-  scenes.add(new Scene(1, 1.75, -230, 20, 50, 1));
-  scenes.add(new Scene(2, 0.82, 10, 20, 50, 2));
-  scenes.add(new Scene(3, 0.82, 10, 20, 50, 3));
-  scenes.add(new Scene(4, 0.82, 10, 20, 50, 4));  
+  scenes.add(new Scene(1, 2.95, -440, 40, 100, 1));
+  scenes.add(new Scene(2, 1.25, -60, 20, 50, 2));
+  scenes.add(new Scene(3, 1.02, -0, 20, 50, 3));
+  scenes.add(new Scene(4, 1.42, -40, 20, 50, 4));  
   scenes.add(new Scene(5, 0.82, 10, 20, 30, 5)); 
   scenes.add(new Scene(6, 0.82, 25, 10, 30, 1));  
   scenes.add(new Scene(7, 0.93, -5, 10, 35, 0));  

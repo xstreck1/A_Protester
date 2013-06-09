@@ -23,8 +23,8 @@ void setup() {
   orientation(LANDSCAPE);
 
   initialize();
-  game_state.scene_type = HOME;
-  game_state.cur_scene = 0;
+  game_state.scene_type = APPROACH;
+  game_state.cur_scene = 7;
   setScene();
 
   /* minim = new Minim(this);

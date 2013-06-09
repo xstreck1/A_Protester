@@ -10,12 +10,12 @@ void createScenes() {
   scenes.add(new Scene(2, 0.82, 10, 20, 50, 2));
   scenes.add(new Scene(3, 0.82, 10, 20, 50, 3));
   scenes.add(new Scene(4, 0.82, 10, 20, 50, 4));  
-  scenes.add(new Scene(5, 0.82, 10, 20, 50, 5)); 
-  scenes.add(new Scene(6, 0.82, 25, 20, 50, 1));  
-  scenes.add(new Scene(7, 0.82, 25, 20, 50, 0));  
-  scenes.add(new Scene(8, 0.82, 10, 20, 50, 0));  
-  scenes.add(new Scene(9, 0.82, 10, 20, 50, 0));  
-  scenes.add(new Scene(10, 0.82, 10, 20, 50, 0));   
+  scenes.add(new Scene(5, 0.82, 10, 20, 30, 5)); 
+  scenes.add(new Scene(6, 0.82, 25, 10, 30, 1));  
+  scenes.add(new Scene(7, 0.93, -5, 10, 35, 0));  
+  scenes.add(new Scene(8, 1.55, -200, 20, 40, 0));  
+  scenes.add(new Scene(9, 1.3, -65, 15, 60, 0));  
+  scenes.add(new Scene(10, 0.82, 25, 10, 50, 0));   
 }
 
 public class Scene {

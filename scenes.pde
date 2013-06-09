@@ -1,5 +1,5 @@
-final int SHOT_SCENE = 1;
-final int FALL_SCENE = 2;
+final int SHOT_SCENE = 6;
+final int FALL_SCENE = 7;
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
@@ -9,6 +9,12 @@ void createScenes() {
   scenes.add(new Scene(2, 0.82, 10, 20, 50));
   scenes.add(new Scene(3, 0.82, 10, 20, 50));
   scenes.add(new Scene(4, 0.82, 10, 20, 50));  
+  scenes.add(new Scene(5, 0.82, 10, 20, 50)); 
+  scenes.add(new Scene(6, 0.82, 25, 20, 50));  
+  scenes.add(new Scene(7, 0.82, 25, 20, 50));  
+  scenes.add(new Scene(8, 0.82, 10, 20, 50));  
+  scenes.add(new Scene(9, 0.82, 10, 20, 50));  
+  scenes.add(new Scene(10, 0.82, 10, 20, 50));   
 }
 
 public class Scene {

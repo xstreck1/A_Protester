@@ -22,8 +22,8 @@ void setup() {
   orientation(LANDSCAPE);
   
   initialize();
-  game_state.scene_type = HOME;
-  game_state.cur_scene = 0;
+  game_state.scene_type = WALK;
+  game_state.cur_scene = 6;
   setScene();
 
   /* minim = new Minim(this);
@@ -48,9 +48,9 @@ void draw() {
 void reactToEvents() {
   // React to input / event
   if (game_state.blocked <= 0) {
-    if (game_state.cur_scene == SHOT_SCENE && avatar.isLeftFrom(win_width/2 + win_x)) {
+    if (game_state.cur_scene == SHOT_SCENE && avatar.isLeftFrom(Math.round(win_width * 6.5 / 8.0) + win_x)) {
       setUpTheShot();
-    } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 3.0 / 8.0) + win_x))  {
+    } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 1.5 / 8.0) + win_x))  {
       setUpTheFall();
     } else if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {// Control scene change.
       if (game_state.scene_type == HOME) {

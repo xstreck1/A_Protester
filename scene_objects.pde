@@ -101,6 +101,10 @@ class Sprite {
   float getWidth() {
     return (animation.getWidth() * scale);
   }
+  
+  int getFrame() {
+    return frame;
+  }
 };
 
 class Avatar extends Sprite {
@@ -126,5 +130,33 @@ class Avatar extends Sprite {
   
   int getAvWidth() {
     return Math.round(av_width);
+  }
+};
+
+class Bystander extends Sprite {
+  BystanderData my_data;
+  
+  Bystander(BystanderData _my_data, Animation animation, float _x, float _y,  float _d_x, float _d_y, float _scale) {
+    super(animation, _x, _y, _d_x, _d_y, _scale);
+    my_data = _my_data;
+  }
+  
+  void display() {
+    tint(my_data.tint_r, my_data.tint_g, my_data.tint_b);
+    super.display();
+  }
+};
+
+class BystanderData {
+  int tint_r;
+  int tint_g;
+  int tint_b;
+  float scale;
+  
+  BystanderData(int _tint_r, int _tint_g, int _tint_b, float _scale) {
+    tint_r = _tint_r;
+    tint_g = _tint_g;
+    tint_b = _tint_b;
+    scale = _scale;
   }
 };

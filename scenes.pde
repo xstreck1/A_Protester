@@ -1,20 +1,21 @@
-final int SHOT_SCENE = 1;
-final int FALL_SCENE = 3;
+final int SHOT_SCENE = 6;
+final int FALL_SCENE = 10;
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
-  scenes.add(new Scene(0, 0.95, 10, 30, 60));
-  scenes.add(new Scene(1, 1.75, -230, 20, 50));
-  scenes.add(new Scene(2, 0.82, 10, 20, 50));
-  scenes.add(new Scene(3, 0.82, 10, 20, 50));
-  scenes.add(new Scene(4, 0.82, 10, 20, 50));  
-  scenes.add(new Scene(5, 0.82, 10, 20, 50)); 
-  scenes.add(new Scene(6, 0.82, 25, 20, 50));  
-  scenes.add(new Scene(7, 0.82, 25, 20, 50));  
-  scenes.add(new Scene(8, 0.82, 10, 20, 50));  
-  scenes.add(new Scene(9, 0.82, 10, 20, 50));  
-  scenes.add(new Scene(10, 0.82, 10, 20, 50));   
+  scenes = new Vector<Scene>();
+  scenes.add(new Scene(0, 0.95, 10, 30, 60, 0));
+  scenes.add(new Scene(1, 1.75, -230, 20, 50, 1));
+  scenes.add(new Scene(2, 0.82, 10, 20, 50, 2));
+  scenes.add(new Scene(3, 0.82, 10, 20, 50, 3));
+  scenes.add(new Scene(4, 0.82, 10, 20, 50, 4));  
+  scenes.add(new Scene(5, 0.82, 10, 20, 50, 5)); 
+  scenes.add(new Scene(6, 0.82, 25, 20, 50, 1));  
+  scenes.add(new Scene(7, 0.82, 25, 20, 50, 0));  
+  scenes.add(new Scene(8, 0.82, 10, 20, 50, 0));  
+  scenes.add(new Scene(9, 0.82, 10, 20, 50, 0));  
+  scenes.add(new Scene(10, 0.82, 10, 20, 50, 0));   
 }
 
 public class Scene {
@@ -23,13 +24,15 @@ public class Scene {
   int floor;
   int left_border;
   int right_border;
+  int bystanders;
   
-  Scene(int _scene_no, float _scale, int _floor, int _left_border, int _right_border) {
+  Scene(int _scene_no, float _scale, int _floor, int _left_border, int _right_border, int _bystanders) {
     scale = _scale;
     background = loadImage("Scene" + _scene_no + ".jpg");
     floor = _floor;
     left_border = _left_border;
     right_border = _right_border;
+    bystanders = _bystanders;
   }
   
   int getRightBorder() {
@@ -43,9 +46,17 @@ public class Scene {
   int getFloor() {
     return floor;
   }
+  
+  int getByNo() {
+    return bystanders;
+  }
+  
+  float getScale() {
+    return scale;
+  }
 };
 
-void setScene() {
+void setScene() {  
   // Set new scene type
   if (game_state.cur_scene == 1) {
     game_state.scene_type = WALK;
@@ -71,6 +82,12 @@ void setScene() {
     avatar = new Avatar(walkw, av_x, av_y, d_x, d_y, scale, av_width);
   } else {
     println("Errorneous scene type.");
+  }
+  
+  bystanders = new Vector<Bystander>();
+  game_state.no_of_sprites = scenes.get(game_state.cur_scene).getByNo();
+  for (int i = 0; i < game_state.no_of_sprites; i++) {
+    bystanders.add(new Bystander(bystanders_data.get(i), (i % 2 == 0) ? walk : walkw, av_x - (random(FOLLOW_START, FOLLOW_START*4) * ratio * scale), av_y, d_x, d_y, scale));
   }
 }
 

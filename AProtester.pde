@@ -5,8 +5,9 @@ import java.util.Map;
 import java.util.Vector;
 
 GameState game_state = new GameState();
-Vector<Scene> scenes = new Vector<Scene>();
-HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
+Vector<Scene> scenes;
+Vector<Bystander> bystanders;
+Vector<BystanderData> bystanders_data;
 Avatar avatar;
 Animation walk;
 Animation walkw;
@@ -37,12 +38,15 @@ void draw() {
     displayScene();
     displayText();
     displaySprites();
+    tint(255, 255);
     avatar.display();
   } else {
     --game_state.dont_draw;
   }
   reactToEvents();
   controlFading();
+  
+  game_state.frame++;
 }
 
 void reactToEvents() {

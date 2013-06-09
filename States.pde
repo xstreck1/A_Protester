@@ -22,6 +22,8 @@ public class GameState {
   int dont_draw = 0;
   int to_visible = 0;
   int to_end = 0;
+  int no_of_sprites = 0;
+  int frame = 0;
 };
 
 Vector< Vector < String > > texts;

@@ -10,7 +10,6 @@ final int WALL = 102;
 
 final int SECOND = 25;
 
-
 public class GameState {
   int scene_type = 0;
   int blocked = 0;
@@ -32,15 +31,25 @@ void initTexts() {
   Vector<String> scene_text = new Vector<String>();
   scene_text.add("It Is Happening Out There");
   scene_text.add("Everyone Is Out");
+  scene_text.add("I Have To Go");
+  scene_text.add("The Door Are The Way");
   texts.add(scene_text);
   scene_text = new Vector<String>();
-  scene_text.add("There is no way back");
+  scene_text.add("There Is No Way Back");
+  scene_text.add("I Am Part Of This Now");
+  scene_text.add("I Can't Back Now");
+  scene_text.add("Everyone Sees Me");
+  scene_text.add("Only One Way To Go");
   texts.add(scene_text);
   scene_text = new Vector<String>();
-  scene_text.add("I Can't Believe It Is Happening");
+  scene_text.add("I Can't Believe It's Happening");
+  scene_text.add("So Much Violence");
+  scene_text.add("I Must Keep Hope.");
+  scene_text.add("I Must Persist"); 
   texts.add(scene_text);
   scene_text = new Vector<String>();
   scene_text.add("There he is...");
+  scene_text.add("Why?");
   texts.add(scene_text);
 }
 

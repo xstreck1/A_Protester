@@ -8,22 +8,27 @@ GameState game_state = new GameState();
 HashMap<String, Scene> scenes = new HashMap<String, Scene>();
 HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
 Avatar avatar;
-Animation walk; 
+Animation walk;
+Animation walkw;
+Animation injured;
 
 /* AudioPlayer player;
  Minim minim; */
 
 void setup() {
 
-  // size(480, 320);
-  size(800, 600);
+  size(480, 320);
+  // size(800, 600);
   frameRate(25);
-  // orientation(LANDSCAPE);
+  orientation(LANDSCAPE);
 
   initDimensions();
   createScenes();
-  walk = new Animation("walk", 20); 
-  setScene(DOOR_SCENE);
+  walk = new Animation("walk", 20);
+  walkw = new Animation("walkw", 20);
+  injured = new Animation("walk",20);
+  game_state.cur_scene = DOOR_SCENE;
+  setScene();
 
   /* minim = new Minim(this);
    player = minim.loadFile("bg_music.mp3", 2048);
@@ -36,15 +41,20 @@ void setupFont() {
   textFont(text_font);
 }
 
-void setScene(String name) {
-  game_state.cur_scene = name;
-  float scale = scenes.get(name).scale;
+void setScene() {
+  float scale = scenes.get(game_state.cur_scene).scale;
   float av_width = AVATAR_WIDHT * scale;
-  float av_x = scenes.get(name).getLeftBorder() + ((av_width - PURPOSED_WIDTH * scale) / 2);
-  float av_y = -scenes.get(name).floor + (PURPOSED_HEIGHT) * (1.0 - scale) + AVATAR_UP * scale; // Adjust to uplift of the sprite, the floor height and scaling of the picture w.r.t. the original assumption.
+  float av_x = scenes.get(game_state.cur_scene).getLeftBorder() + ((av_width - PURPOSED_WIDTH * scale) / 2);
+  float av_y = -scenes.get(game_state.cur_scene).floor + (PURPOSED_HEIGHT) * (1.0 - scale) + AVATAR_UP * scale; // Adjust to uplift of the sprite, the floor height and scaling of the picture w.r.t. the original assumption.
   float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0;
   float d_y = 0.0;
-  avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
+  if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
+    avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
+  } else if (game_state.scene_type == APPROACH) {
+    avatar = new Avatar(walkw, av_x, av_y, d_x, d_y, scale, av_width);
+  } else {
+    avatar = new Avatar(injured, av_x, av_y, d_x, d_y, scale, av_width);
+  }
 }
 
 void draw() {
@@ -64,7 +74,7 @@ void draw() {
 void reactToEvents() {
   // React to input / event
   if (game_state.blocked <= 0) {
-    if (game_state.cur_scene.equals(DOOR_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
+    if (game_state.cur_scene.equals(WALL_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
       setUpTheShot();
     } else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {
@@ -77,6 +87,9 @@ void reactToEvents() {
     }
     // Control scene change.
     if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {
+      if (game_state.scene_type == HOME) {
+        game_state.scene_type = WALK;
+      }
       game_state.to_change = SECOND;
       game_state.blocked = SECOND * 2;
     }
@@ -88,7 +101,9 @@ void reactToEvents() {
       if (game_state.to_mist == 0) {
         fill(MIST_COL,255);
         rect(0,0,win_width + win_x*2,win_height + win_y*2);
-        setScene(nextScene(game_state.cur_scene));
+        game_state.cur_scene = nextScene(game_state.cur_scene);
+        game_state.scene_type = APPROACH;
+        setScene();
         game_state.to_visible = SECOND * 6;
         game_state.blocked = SECOND * 6;  
       }
@@ -123,8 +138,9 @@ void controlFading() {
     fill(0, (255 / SECOND) * (SECOND - game_state.to_change));
     rect(win_x, win_y, win_width, win_height);
     if (--game_state.to_change <= 0) {
-      setScene(nextScene(game_state.cur_scene));
-        game_state.to_begin = SECOND * 2;
+      game_state.cur_scene = nextScene(game_state.cur_scene);
+      setScene();
+      game_state.to_begin = SECOND * 2;
     }
   }
   if (--game_state.to_begin > 0) {
@@ -150,7 +166,8 @@ void displayText() {
   if (game_state.text_time > 0) {
     game_state.text_time--;
     textSize(font_size);
-     float text_width = textWidth(game_state.cur_text);
+    fill(255,255);
+    float text_width = textWidth(game_state.cur_text);
     float x_coord = (win_width - text_width) / 2 + win_x;
     text(game_state.cur_text, x_coord, text_y);
   }

@@ -1,7 +1,8 @@
 // Scene type
 final int HOME = 1;
 final int WALK = 2;
-final int INJURED = 3;
+final int APPROACH = 3;
+final int INJURED = 4;
 
 // Scene states
 final int DOOR = 101;
@@ -13,6 +14,7 @@ final int MIST_COL = 230;
 final int MIST_ALPHA = 20;
 
 public class GameState {
+  int scene_type = HOME;
   int blocked = 0;
   String cur_scene = "";
   String cur_text;

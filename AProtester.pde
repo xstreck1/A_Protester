@@ -23,6 +23,7 @@ void setup() {
   orientation(LANDSCAPE);
 
   initDimensions();
+  initTexts();
   createScenes();
   walk = new Animation("walk", 20);
   walkw = new Animation("walkw", 20);
@@ -80,8 +81,11 @@ void reactToEvents() {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
         game_state.blocked = avatar.getCount();
-      } else if (avatar.isLeftFrom(mouseX)) {
-        game_state.cur_text = "There is no way back.";
+      } else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
+        game_state.cur_text = texts.get(game_state.scene_type - 1).get(0);
+        println(texts.get(game_state.scene_type - 1).size());
+        if (texts.get(game_state.scene_type - 1).size() > 1)
+          texts.get(game_state.scene_type - 1).remove(0);
         game_state.text_time = SECOND ;
       }
     }

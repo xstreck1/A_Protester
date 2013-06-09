@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 final int PURPOSED_WIDTH = 480;
 final int PURPOSED_HEIGHT = 320;
 

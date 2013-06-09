@@ -1,10 +1,15 @@
+import java.util.Vector;
+
 void initialize() {
   initDimensions();
+  createScenes();
   initTexts();
   initBystanders();
-  createScenes();
   walk = new Animation("walk", 20);
   walkw = new Animation("walkw", 20);
+  sound_im = loadImage("sound.png");
+  no_sound = loadImage("nosound.png");
+  sound = false;
 }
 
 void setupFont() {

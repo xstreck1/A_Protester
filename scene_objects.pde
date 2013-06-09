@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 // Class for animating a sequence of GIFs
 // Based on an Example Animated Sprite (Shifty + Teddy) by James Paterson. 
 class Animation {

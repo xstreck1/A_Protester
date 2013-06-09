@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 void displayScene() {
   background(0, 0, 0);
   image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
@@ -7,11 +9,10 @@ void displayText() {
   if (game_state.text_time > 0) {
     game_state.text_time--;
     textSize(font_size);
-    if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
-      fill(0, 255);
-    } else {
-      fill(255, 255);
-    }
+    
+    fill(0,255);
+    rect(win_x, win_y + Math.round(win_height * 1.0 / 6.0) - font_size, win_width, font_size * 2);
+    fill(255,255);
     textOut(1.0, game_state.cur_text);
   }
 }

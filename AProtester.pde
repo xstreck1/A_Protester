@@ -20,10 +20,10 @@ void setup() {
   // size(800, 600);
   frameRate(25);
   orientation(LANDSCAPE);
-  
+
   initialize();
   game_state.scene_type = WALK;
-  game_state.cur_scene = 6;
+  game_state.cur_scene = 0;
   setScene();
 
   /* minim = new Minim(this);
@@ -50,7 +50,7 @@ void reactToEvents() {
   if (game_state.blocked <= 0) {
     if (game_state.cur_scene == SHOT_SCENE && avatar.isLeftFrom(Math.round(win_width * 6.5 / 8.0) + win_x)) {
       setUpTheShot();
-    } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 1.5 / 8.0) + win_x))  {
+    } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 1.5 / 8.0) + win_x)) {
       setUpTheFall();
     } else if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {// Control scene change.
       if (game_state.scene_type == HOME) {
@@ -59,32 +59,34 @@ void reactToEvents() {
       game_state.to_change = SECOND;
       game_state.blocked = SECOND * 2;
     } else if (mousePressed) {
-      if (avatar.isRightFrom(mouseX)) {
-        avatar.startAnim(1);
-        game_state.blocked = avatar.getCount();
-      } else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
-        game_state.cur_text = texts.get(game_state.scene_type - 1).get(0);
-        if (texts.get(game_state.scene_type - 1).size() > 1)
-          texts.get(game_state.scene_type - 1).remove(0);
-        game_state.text_time = SECOND ;
-      }
+      reactToMouse();
     }
   } else {
     game_state.blocked--;
-    
+
     if (game_state.to_mist > 0) {
       fillWithWhite();
+      game_state.to_mist--;
       if (game_state.to_mist == 0) {
-        fill(MIST_COL,255);
-        rect(0,0,win_width + win_x*2,win_height + win_y*2);
-        game_state.cur_scene++;
-        game_state.scene_type = APPROACH;
-        setScene();
-        game_state.to_visible = SECOND * 6;
-        game_state.blocked = SECOND * 6;  
+        lightUp();
       }
     }
-  }  
+    
+    if (game_state.to_end-- > 0) {
+      showEnd();
+    }
+  }
 }
 
+void reactToMouse() {
+  if (avatar.isRightFrom(mouseX)) {
+    avatar.startAnim(1);
+    game_state.blocked = avatar.getCount();
+  } else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
+    game_state.cur_text = texts.get(game_state.scene_type - 1).get(0);
+    if (texts.get(game_state.scene_type - 1).size() > 1)
+      texts.get(game_state.scene_type - 1).remove(0);
+    game_state.text_time = SECOND;
+  }
+}
 

@@ -9,7 +9,13 @@ int win_x = 0;
 int win_y = 0;
 float ratio = 0.0;
 
-final int PURPOSED_FONT_SIZE = 32;
+
+final int MIST_COL = 230;
+final int MIST_ALPHA = 25;
+final int END_FADE_ALPHA = 12;
+final int FONT_APPEAR_ALPHA = 25;
+
+final int PURPOSED_FONT_SIZE = 24;
 int font_size = 0;
 final int PURPOSED_TEXT_LINE = 50;
 int text_y = 0;

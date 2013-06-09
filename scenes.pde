@@ -80,5 +80,6 @@ void setUpTheFall() {
   avatar.setAnimation(fall);
   avatar.animateOnce();
   avatar.stopMove();
-  game_state.blocked = Integer.MAX_VALUE;  
+  game_state.blocked = Integer.MAX_VALUE; // Block forever.
+  game_state.to_end = SECOND * 15; 
 }

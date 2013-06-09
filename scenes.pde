@@ -1,28 +1,14 @@
-final String DOOR_SCENE = "Door";
-final String WALL_SCENE = "Wall";
-final String CLIMB_SCENE = "Climb";
-final String WAKE_SCENE = "Wake";
+final int SHOT_SCENE = 1;
+final int FALL_SCENE = 0;
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
-  scenes.put(DOOR_SCENE, new Scene(0.8, DOOR_SCENE, 10, 30, 60));
-  scenes.put(WALL_SCENE, new Scene(0.75, WALL_SCENE, 10, 20, 50));
-  scenes.put(CLIMB_SCENE, new Scene(0.82, CLIMB_SCENE, 10, 20, 50));
-}
-
-final String nextScene(final String current_scene) {
-  if (current_scene.equals(DOOR_SCENE)) {
-    return WALL_SCENE;
-  } else if (current_scene.equals(WALL_SCENE)) {
-    return CLIMB_SCENE;
-  } else if (current_scene.equals(CLIMB_SCENE)) {
-    return WAKE_SCENE;
-  } else if (current_scene.equals(WAKE_SCENE)) {
-    return WAKE_SCENE;
-  } else {
-    return "";
-  }
+  scenes.add(new Scene(0, 0.8, 10, 30, 60));
+  scenes.add(new Scene(1, 1.75, -230, 20, 50));
+  scenes.add(new Scene(2, 0.82, 10, 20, 50));
+  scenes.add(new Scene(3, 0.82, 10, 20, 50));
+  scenes.add(new Scene(4, 0.82, 10, 20, 50));  
 }
 
 public class Scene {
@@ -32,9 +18,9 @@ public class Scene {
   int left_border;
   int right_border;
   
-  Scene(float _scale, String _bg_image, int _floor, int _left_border, int _right_border) {
+  Scene(int _scene_no, float _scale, int _floor, int _left_border, int _right_border) {
     scale = _scale;
-    background = loadImage(_bg_image + ".jpg");
+    background = loadImage("Scene" + _scene_no + ".jpg");
     floor = _floor;
     left_border = _left_border;
     right_border = _right_border;
@@ -52,3 +38,34 @@ public class Scene {
     return floor;
   }
 };
+
+void setScene() {
+  int scene = game_state.cur_scene;
+  float scale = scenes.get(scene).scale;
+  float av_width = AVATAR_WIDHT * scale;
+  float av_x = scenes.get(scene).getLeftBorder() + ((av_width - PURPOSED_WIDTH * scale) / 2);
+  float av_y = -scenes.get(scene).floor + (PURPOSED_HEIGHT) * (1.0 - scale) + AVATAR_UP * scale; // Adjust to uplift of the sprite, the floor height and scaling of the picture w.r.t. the original assumption.
+  float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0;
+  float d_y = 0.0;
+  if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
+    avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
+  } else if (game_state.scene_type == APPROACH || game_state.scene_type == INJURED) {
+    avatar = new Avatar(walkw, av_x, av_y, d_x, d_y, scale, av_width);
+  } else {
+    println("Errorneous scene type.");
+  }
+}
+
+void setUpTheShot() {
+  Animation shot = new Animation("shot", 20);
+  avatar.setAnimation(shot);
+  avatar.animateOnce();
+  avatar.stopMove();
+  avatar.move(-50.0, -50.0);
+  game_state.blocked = SECOND * 8;
+  game_state.to_mist = SECOND * 8;
+}
+
+void setUpTheFall() {
+  
+}

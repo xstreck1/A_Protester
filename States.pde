@@ -31,13 +31,13 @@ void initTexts() {
   texts = new Vector< Vector< String > >();
   Vector<String> scene_text = new Vector<String>();
   scene_text.add("It Is Happening Out There");
-  scene_text.add("Everything is behind the door.");
+  scene_text.add("Everyone Is Out");
   texts.add(scene_text);
   scene_text = new Vector<String>();
-  scene_text.add("There is no way back.");
+  scene_text.add("There is no way back");
   texts.add(scene_text);
   scene_text = new Vector<String>();
-  scene_text.add("Not point going back.");
+  scene_text.add("I Can't Believe It Is Happening");
   texts.add(scene_text);
   scene_text = new Vector<String>();
   scene_text.add("There he is...");

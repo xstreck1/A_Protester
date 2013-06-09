@@ -18,7 +18,6 @@ final int FONT_APPEAR_ALPHA = 25;
 final int PURPOSED_FONT_SIZE = 24;
 int font_size = 0;
 final int PURPOSED_TEXT_LINE = 50;
-int text_y = 0;
 
 void initDimensions () {
   setWindow();
@@ -38,6 +37,5 @@ void setWindow() {
   }
   println (width + " " + height );
   println (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
-  text_y = Math.round((float) PURPOSED_TEXT_LINE * ratio) + win_y;
   font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
 }

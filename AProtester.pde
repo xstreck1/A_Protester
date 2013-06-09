@@ -22,7 +22,7 @@ void setup() {
   orientation(LANDSCAPE);
 
   initialize();
-  game_state.scene_type = WALK;
+  game_state.scene_type = HOME;
   game_state.cur_scene = 0;
   setScene();
 
@@ -53,9 +53,6 @@ void reactToEvents() {
     } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 1.5 / 8.0) + win_x)) {
       setUpTheFall();
     } else if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {// Control scene change.
-      if (game_state.scene_type == HOME) {
-        game_state.scene_type = WALK;
-      }
       game_state.to_change = SECOND;
       game_state.blocked = SECOND * 2;
     } else if (mousePressed) {

@@ -7,10 +7,12 @@ void displayText() {
   if (game_state.text_time > 0) {
     game_state.text_time--;
     textSize(font_size);
-    fill(255, 255);
-    float text_width = textWidth(game_state.cur_text);
-    float x_coord = (win_width - text_width) / 2 + win_x;
-    text(game_state.cur_text, x_coord, text_y);
+    if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
+      fill(0, 255);
+    } else {
+      fill(255, 255);
+    }
+    textOut(1.0, game_state.cur_text);
   }
 }
 
@@ -78,25 +80,22 @@ void showEnd() {
     fill(0, 255);
     rect(win_x, win_y, win_width, win_height);
   }
-  
+
   textSize(font_size);
   fill(255, FONT_APPEAR_ALPHA);
 
   if (game_state.to_end > SECOND * 6) {
-    String text = "This Is Not The End";
-    float text_width = textWidth(text);
-    float x_coord = (win_width - text_width) / 2 + win_x;
-    text(text, x_coord, win_y + Math.round(win_height * 1.0 / 6.0) + font_size / 2);
+    textOut(1.0, "This Is Not The End");
   } else if (game_state.to_end > SECOND * 3) {
-    String text = "Other Stories Are Happening Right Now";
-    float text_width = textWidth(text);
-    float x_coord = (win_width - text_width) / 2 + win_x;
-    text(text, x_coord, win_y + Math.round(win_height * 3.0 / 6.0) + font_size / 2);
-  } else  {
-    String text = "Public Attention May Prevent Violence";
-    float text_width = textWidth(text);
-    float x_coord = (win_width - text_width) / 2 + win_x;
-    text(text, x_coord, win_y + Math.round(win_height * 5.0 / 6.0) + font_size / 2);
+    textOut(3.0, "Other Stories Are Happening Right Now");
+  } else {
+    textOut(5.0, "Public Attention May Prevent Violence");
   }
+}
+
+void textOut(float position, String text) {
+  float text_width = textWidth(text);
+  float x_coord = (win_width - text_width) / 2 + win_x;
+  text(text, x_coord, win_y + Math.round(win_height * position / 6.0) + font_size / 2);
 }
 

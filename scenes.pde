@@ -1,5 +1,5 @@
-final int SHOT_SCENE = 6;
-final int FALL_SCENE = 7;
+final int SHOT_SCENE = 1;
+final int FALL_SCENE = 3;
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
@@ -46,6 +46,15 @@ public class Scene {
 };
 
 void setScene() {
+  // Set new scene type
+  if (game_state.cur_scene == 1) {
+    game_state.scene_type = WALK;
+  } else if (game_state.cur_scene == SHOT_SCENE + 1) {
+    game_state.scene_type = APPROACH;
+  } else if (game_state.cur_scene == FALL_SCENE) {
+    game_state.scene_type = INJURED;
+  }
+  
   // Set scaling
   int scene = game_state.cur_scene;
   float scale = scenes.get(scene).scale;

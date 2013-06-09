@@ -50,6 +50,14 @@ void reactToEvents() {
   if (game_state.blocked <= 0) {
     if (game_state.cur_scene == SHOT_SCENE && avatar.isLeftFrom(win_width/2 + win_x)) {
       setUpTheShot();
+    } else if (game_state.cur_scene == FALL_SCENE && avatar.isLeftFrom(Math.round(win_width * 3.0 / 8.0) + win_x))  {
+      setUpTheFall();
+    } else if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {// Control scene change.
+      if (game_state.scene_type == HOME) {
+        game_state.scene_type = WALK;
+      }
+      game_state.to_change = SECOND;
+      game_state.blocked = SECOND * 2;
     } else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
@@ -60,14 +68,6 @@ void reactToEvents() {
           texts.get(game_state.scene_type - 1).remove(0);
         game_state.text_time = SECOND ;
       }
-    }
-    // Control scene change.
-    if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {
-      if (game_state.scene_type == HOME) {
-        game_state.scene_type = WALK;
-      }
-      game_state.to_change = SECOND;
-      game_state.blocked = SECOND * 2;
     }
   } else {
     game_state.blocked--;

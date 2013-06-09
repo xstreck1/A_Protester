@@ -1,10 +1,10 @@
 final int SHOT_SCENE = 1;
-final int FALL_SCENE = 0;
+final int FALL_SCENE = 2;
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
-  scenes.add(new Scene(0, 0.8, 10, 30, 60));
+  scenes.add(new Scene(0, 0.95, 10, 30, 60));
   scenes.add(new Scene(1, 1.75, -230, 20, 50));
   scenes.add(new Scene(2, 0.82, 10, 20, 50));
   scenes.add(new Scene(3, 0.82, 10, 20, 50));
@@ -40,6 +40,7 @@ public class Scene {
 };
 
 void setScene() {
+  // Set scaling
   int scene = game_state.cur_scene;
   float scale = scenes.get(scene).scale;
   float av_width = AVATAR_WIDHT * scale;
@@ -47,6 +48,8 @@ void setScene() {
   float av_y = -scenes.get(scene).floor + (PURPOSED_HEIGHT) * (1.0 - scale) + AVATAR_UP * scale; // Adjust to uplift of the sprite, the floor height and scaling of the picture w.r.t. the original assumption.
   float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0;
   float d_y = 0.0;
+  
+  // Sete avatar type
   if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
     avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
   } else if (game_state.scene_type == APPROACH || game_state.scene_type == INJURED) {
@@ -67,5 +70,9 @@ void setUpTheShot() {
 }
 
 void setUpTheFall() {
-  
+  Animation fall = new Animation("fall", 20);
+  avatar.setAnimation(fall);
+  avatar.animateOnce();
+  avatar.stopMove();
+  game_state.blocked = Integer.MAX_VALUE;  
 }

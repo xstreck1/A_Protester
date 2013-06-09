@@ -15,8 +15,8 @@ Animation walk;
 
 void setup() {
 
-  size(480, 320);
-  // size(800, 600);
+  // size(480, 320);
+  size(800, 600);
   frameRate(25);
   // orientation(LANDSCAPE);
 
@@ -49,10 +49,14 @@ void setScene(String name) {
 
 void draw() {
   // Display objects.
-  displayScene();
-  displayText();
-  displaySprites();
-  avatar.display();
+  if (game_state.dont_draw <= 0) {
+    displayScene();
+    displayText();
+    displaySprites();
+    avatar.display();
+  } else {
+    --game_state.dont_draw;
+  }
   reactToEvents();
   controlFading();
 }
@@ -60,20 +64,15 @@ void draw() {
 void reactToEvents() {
   // React to input / event
   if (game_state.blocked <= 0) {
-    if (game_state.cur_scene.equals(CLIMB_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
-      Animation shot = new Animation("shot", 20);
-      avatar.setAnimation(shot);
-      avatar.animateOnce();
-      avatar.stopMove();
-      avatar.move(-50.0, -50.0);
-      game_state.blocked = 10000;
+    if (game_state.cur_scene.equals(DOOR_SCENE) && avatar.isLeftFrom(win_width/2 + win_x)) {
+      setUpTheShot();
     } else if (mousePressed) {
       if (avatar.isRightFrom(mouseX)) {
         avatar.startAnim(1);
         game_state.blocked = avatar.getCount();
       } else if (avatar.isLeftFrom(mouseX)) {
         game_state.cur_text = "There is no way back.";
-        game_state.text_time = 30;
+        game_state.text_time = SECOND ;
       }
     }
     // Control scene change.
@@ -83,21 +82,62 @@ void reactToEvents() {
     }
   } else {
     game_state.blocked--;
+    
+    if (game_state.to_mist > 0) {
+      fillWithWhite();
+      if (game_state.to_mist == 0) {
+        fill(MIST_COL,255);
+        rect(0,0,win_width + win_x*2,win_height + win_y*2);
+        setScene(nextScene(game_state.cur_scene));
+        game_state.to_visible = SECOND * 6;
+        game_state.blocked = SECOND * 6;  
+      }
+    }
   }  
+}
+
+void fillWithWhite() {
+  game_state.to_mist--;
+  fill(MIST_COL,MIST_ALPHA);
+  noStroke();
+  float corner_dist = Math.max(win_width + win_x, win_height + win_y) * 2.0;
+  int to_fill = Math.round((corner_dist / (SECOND*6)) * Math.max(0,(SECOND*6 - game_state.to_mist)));
+  if (to_fill > 0) {
+    game_state.dont_draw = 1;
+  }
+  ellipse(win_width/2 + win_x, win_height + win_y - scenes.get(game_state.cur_scene).getFloor() * ratio, to_fill, to_fill);  
+}
+
+void setUpTheShot() {
+  Animation shot = new Animation("shot", 20);
+  avatar.setAnimation(shot);
+  avatar.animateOnce();
+  avatar.stopMove();
+  avatar.move(-50.0, -50.0);
+  game_state.blocked = SECOND * 8;
+  game_state.to_mist = SECOND * 8;
 }
 
 void controlFading() {
   if (game_state.to_change > 0) {
-  fill(0, (255 / SECOND) * (SECOND - game_state.to_change));
-  rect(win_x, win_y, win_width, win_height);
-  if (--game_state.to_change <= 0) {
-    setScene(nextScene(game_state.cur_scene));
-      game_state.to_begin = SECOND;
+    fill(0, (255 / SECOND) * (SECOND - game_state.to_change));
+    rect(win_x, win_y, win_width, win_height);
+    if (--game_state.to_change <= 0) {
+      setScene(nextScene(game_state.cur_scene));
+        game_state.to_begin = SECOND * 2;
     }
   }
   if (--game_state.to_begin > 0) {
     fill(0, (255 / SECOND) * (game_state.to_begin));
     rect(win_x, win_y, win_width, win_height);
+  } else {
+    game_state.to_begin = 0;
+  }
+  if (game_state.to_visible > 0) {
+    int alpha = Math.min(255, Math.round((255.0 / (SECOND * 3.0)) * (game_state.to_visible)));
+    fill(MIST_COL, alpha);
+    rect(0,0,win_width + win_x*2,win_height + win_y*2);
+    game_state.to_visible--;
   }
 }
 
@@ -110,7 +150,7 @@ void displayText() {
   if (game_state.text_time > 0) {
     game_state.text_time--;
     textSize(font_size);
-    float text_width = textWidth(game_state.cur_text);
+     float text_width = textWidth(game_state.cur_text);
     float x_coord = (win_width - text_width) / 2 + win_x;
     text(game_state.cur_text, x_coord, text_y);
   }

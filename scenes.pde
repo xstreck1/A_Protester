@@ -1,6 +1,7 @@
 final String DOOR_SCENE = "Door";
 final String WALL_SCENE = "Wall";
 final String CLIMB_SCENE = "Climb";
+final String WAKE_SCENE = "Wake";
 
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
@@ -16,7 +17,9 @@ final String nextScene(final String current_scene) {
   } else if (current_scene.equals(WALL_SCENE)) {
     return CLIMB_SCENE;
   } else if (current_scene.equals(CLIMB_SCENE)) {
-    return DOOR_SCENE;
+    return WAKE_SCENE;
+  } else if (current_scene.equals(WAKE_SCENE)) {
+    return WAKE_SCENE;
   } else {
     return "";
   }
@@ -31,7 +34,7 @@ public class Scene {
   
   Scene(float _scale, String _bg_image, int _floor, int _left_border, int _right_border) {
     scale = _scale;
-    background = loadImage(_bg_image + ".png");
+    background = loadImage(_bg_image + ".jpg");
     floor = _floor;
     left_border = _left_border;
     right_border = _right_border;
@@ -43,5 +46,9 @@ public class Scene {
   
   int getLeftBorder() {
     return left_border;
+  }
+  
+  int getFloor() {
+    return floor;
   }
 };

@@ -37,9 +37,19 @@ local.properties
 *jni/*
 *libs/*
 *obj/*
+AndroidMnifest.xml
+sketch.properties
 
 #################
-## Android
+## Misc
 #################
 *~
 *.db
+
+#################
+## Data
+#################
+test_input/*
+sounds/*
+images/*
+web-export/*

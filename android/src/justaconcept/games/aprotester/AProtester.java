@@ -6,8 +6,10 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.test.aprotester.R;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.view.Display;
 
 public class AProtester extends PApplet {
 
@@ -538,7 +540,7 @@ public class AProtester extends PApplet {
 
     public void createScenes() {
 	scenes = new Vector<Scene>();
-	scenes.add(new Scene(0, 1.05f, 5, 30, 60, 0));
+	scenes.add(new Scene(0, 1.05f, 5, 30, 110, 0));
 	scenes.add(new Scene(1, 2.95f, -440, 40, 100, 1));
 	scenes.add(new Scene(2, 1.25f, -60, 20, 50, 2));
 	scenes.add(new Scene(3, 1.02f, -0, 20, 50, 3));
@@ -668,10 +670,12 @@ public class AProtester extends PApplet {
     }
 
     public int sketchWidth() {
-	return 480;
+	println(getWindowManager().getDefaultDisplay().getWidth());
+	return getWindowManager().getDefaultDisplay().getWidth();
     }
 
     public int sketchHeight() {
-	return 320;
+	println(getWindowManager().getDefaultDisplay().getHeight());
+	return getWindowManager().getDefaultDisplay().getHeight();
     }
 }

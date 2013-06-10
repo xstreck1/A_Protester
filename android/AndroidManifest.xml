@@ -3,10 +3,10 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
 
     <application
-        android:debuggable="true"
+        android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="AProtester" >
         <activity android:name="justaconcept.games.aprotester.AProtester" >

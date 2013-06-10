@@ -2,10 +2,11 @@ package justaconcept.games.aprotester;
 
 import java.util.Vector;
 
+import justaconcept.games.aprotester.R;
+
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
-import processing.test.aprotester.R;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -40,14 +41,22 @@ public class AProtester extends PApplet {
 	game_state.cur_scene = 0;
 	setScene();
     }
-
-    public void startMusic() {
+    
+    @Override 
+    public void onPause() {
+	super.onPause();
+	media_player.stop();
+    }
+    
+    @Override 
+    public void onResume() {
+	super.onResume();
 	media_player = MediaPlayer.create(getApplicationContext(), R.raw.background);
 	media_player.setLooping(true);
 	media_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-	if (sound)
-	    media_player.start();
+	media_player.start();
     }
+
 
     public void draw() {
 	// Display objects.
@@ -74,6 +83,9 @@ public class AProtester extends PApplet {
 	controlFading();
 
 	game_state.frame++;
+	
+	if (game_state.finished == true && mousePressed)
+	    finish();    
     }
 
     public void reactToEvents() {
@@ -123,9 +135,6 @@ public class AProtester extends PApplet {
 	    if (texts.get(game_state.scene_type - 1).size() > 1)
 		texts.get(game_state.scene_type - 1).remove(0);
 	    game_state.text_time = SECOND;
-	}
-	if (game_state.finished) {
-	    finish();
 	}
     }
 
@@ -352,7 +361,6 @@ public class AProtester extends PApplet {
 	sound_im = loadImage("sound.png");
 	no_sound = loadImage("nosound.png");
 	sound = true;
-	startMusic();
     }
 
     public void setupFont() {
@@ -627,7 +635,7 @@ public class AProtester extends PApplet {
 	float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0f;
 	float d_y = 0.0f;
 
-	// Sete avatar type
+	// Set avatar type
 	if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
 	    avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
 	} else if (game_state.scene_type == APPROACH || game_state.scene_type == INJURED) {

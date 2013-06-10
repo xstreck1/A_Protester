@@ -1,14 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="processing.test.aprotester"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="justaconcept.games.aprotester"
+    android:versionCode="2"
+    android:versionName="1.01" >
 
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="AProtester" >
+        android:label="A Protester" >
         <activity android:name="justaconcept.games.aprotester.AProtester" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

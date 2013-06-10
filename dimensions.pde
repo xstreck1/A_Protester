@@ -24,11 +24,8 @@ final int PURPOSED_TEXT_LINE = 50;
 final int FOLLOW_START = 70;
 final int FOLLOW_UP = 50;
 
-void initDimensions () {
-  setWindow();
-}
-
-void setWindow() {
+// Change the size based on resolution.
+void initDimensions() {
   if ((float) width / (float) height < (float) PURPOSED_WIDTH / (float) PURPOSED_HEIGHT) {
     ratio = (float) width / (float) PURPOSED_WIDTH;
     win_width = width;

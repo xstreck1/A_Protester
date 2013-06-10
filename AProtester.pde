@@ -15,28 +15,21 @@ boolean sound;
 PImage sound_im;
 PImage no_sound;
 
-/* AudioPlayer player;
- Minim minim; */
-
 void setup() {
 
-  // size(480, 320);
-  size(800, 600);
+  size(480, 320);
+  // size(800, 600);
   frameRate(25);
-  orientation(LANDSCAPE);
+  // orientation(LANDSCAPE);
 
   initialize();
   game_state.scene_type = HOME;
   game_state.cur_scene = 0;
   setScene();
-
-  /* minim = new Minim(this);
-   player = minim.loadFile("bg_music.mp3", 2048);
-   player.play(); */
 }
 
 void draw() {
-  // Display objects.
+  // Display objects (during normal workflow).
   if (game_state.dont_draw <= 0) {
     displayScene();
     displaySprites();
@@ -47,6 +40,8 @@ void draw() {
       image(no_sound, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
     else
       image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+    
+    // Cover the overlaping areas with black 
     fill(0,255);
     rect(0,0, win_x,win_height);
     rect(0,0, win_width,win_y);    
@@ -61,6 +56,7 @@ void draw() {
   game_state.frame++;
 }
 
+// React to environment, if the workflow is not blocked.
 void reactToEvents() {
   // React to input / event
   if (game_state.blocked <= 0) {
@@ -72,15 +68,19 @@ void reactToEvents() {
       game_state.to_change = SECOND;
       game_state.blocked = SECOND * 2;
     } else if (mousePressed) {
+      // React to mouse only if nothing else is scheduled.
       reactToMouse();
     }
   } else {
     game_state.blocked--;
-
+    // Check timed events.
+  
     if (game_state.to_mist > 0) {
+      // Start filling with smoke (white circles)
       fillWithWhite();
       game_state.to_mist--;
       if (game_state.to_mist == 0) {
+        // If the scene is filled, start a new one.
         lightUp();
       }
     }
@@ -91,14 +91,19 @@ void reactToEvents() {
   }
 }
 
+// React to mouse input (button is pressed event).
 void reactToMouse() {
   if (mouseX > win_x && mouseX < (win_x + Math.round(50.0 * ratio)) && mouseY < win_height + win_y && mouseY  > win_height + win_y - Math.round(50.0 * ratio)) {
+    // Switch the sound
     sound = !sound;
   } else if (avatar.isRightFrom(mouseX)) {
+    // Move
     avatar.startAnim(1);
     game_state.blocked = avatar.getCount();
   } else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
+    // Display text
     game_state.cur_text = texts.get(game_state.scene_type - 1).get(0);
+    // Recycle texts.
     if (texts.get(game_state.scene_type - 1).size() > 1)
       texts.get(game_state.scene_type - 1).remove(0);
     game_state.text_time = SECOND;

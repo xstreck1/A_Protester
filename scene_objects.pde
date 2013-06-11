@@ -16,7 +16,7 @@ class Animation {
     }
   }
 
-  void display(int frame, float xpos, float ypos, float my_width, float my_height) {
+  void display(int frame, float xpos, float ypos, int my_width, int my_height) {
     // println(xpos + " " + ypos + " " + my_width + " " + my_height);
     image(images[frame], xpos, ypos, my_width, my_height); 
   }
@@ -40,8 +40,8 @@ class Sprite {
   float y;
   float d_x;
   float d_y;
-  float my_width;
-  float my_height;
+  int my_width;
+  int my_height;
   float scale;
   int animation_steps;
   Animation animation;

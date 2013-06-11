@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 
 final int SHOT_SCENE = 6;
 final int FALL_SCENE = 10;
@@ -6,7 +6,8 @@ final int FALL_SCENE = 10;
 final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 
 void createScenes() {
-  scenes = new Vector<Scene>();
+  scenes = new ArrayList<Scene>();
+  // All set up based on the properties of the background.
   scenes.add(new Scene(0, 1.05, 5, 30, 60, 0));
   scenes.add(new Scene(1, 2.95, -440, 40, 100, 1));
   scenes.add(new Scene(2, 1.25, -60, 20, 50, 2));
@@ -86,7 +87,7 @@ void setScene() {
     println("Errorneous scene type.");
   }
   
-  bystanders = new Vector<Bystander>();
+  bystanders = new ArrayList<Bystander>();
   game_state.no_of_sprites = scenes.get(game_state.cur_scene).getByNo();
   for (int i = 0; i < game_state.no_of_sprites; i++) {
     bystanders.add(new Bystander(bystanders_data.get(i), (i % 2 == 0) ? walk : walkw, av_x - (random(FOLLOW_START, FOLLOW_START*4) * ratio * scale), av_y, d_x, d_y, scale));

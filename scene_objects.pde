@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 
 // Class for animating a sequence of GIFs
 // Based on an Example Animated Sprite (Shifty + Teddy) by James Paterson. 
@@ -16,15 +16,17 @@ class Animation {
     }
   }
 
-  void display(int frame, float xpos, float ypos, float scale) {
-    float my_width = Math.round(images[0].width * scale);
-    float my_height = Math.round(images[0].height * scale);
+  void display(int frame, float xpos, float ypos, float my_width, float my_height) {
     // println(xpos + " " + ypos + " " + my_width + " " + my_height);
     image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
   int getWidth() {
     return images[0].width;
+  }
+  
+  int getHeight() {
+    return images[0].height;
   }
   
   int getCount() {
@@ -38,6 +40,8 @@ class Sprite {
   float y;
   float d_x;
   float d_y;
+  float my_width;
+  float my_height;
   float scale;
   int animation_steps;
   Animation animation;
@@ -49,7 +53,7 @@ class Sprite {
       x += d_x;
       y += d_y;
     } 
-    animation.display(frame,x,y,scale);
+    animation.display(frame,x,y,my_width, my_height);
   }
   
   Sprite(Animation _animation, float _x, float _y,  float _d_x, float _d_y, float _scale) {
@@ -60,6 +64,8 @@ class Sprite {
     d_x = _d_x * ratio;
     d_y = _d_y * ratio;
     scale = _scale * ratio;
+    my_width = Math.round(animation.getWidth() * scale);
+    my_height = Math.round(animation.getHeight() * scale);
   }
   
   void setAnimation(Animation _animation) {

@@ -24,6 +24,8 @@ final int PURPOSED_TEXT_LINE = 50;
 final int FOLLOW_START = 70;
 final int FOLLOW_UP = 50;
 
+float sound_ico_size = 0.0;
+
 // Change the size based on resolution.
 void initDimensions() {
   if ((float) width / (float) height < (float) PURPOSED_WIDTH / (float) PURPOSED_HEIGHT) {
@@ -40,4 +42,5 @@ void initDimensions() {
   println (width + " " + height );
   println (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
   font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
+  sound_ico_size = Math.round(50 * ratio);
 }

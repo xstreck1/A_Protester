@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 
 void initialize() {
   initDimensions();
@@ -19,7 +19,7 @@ void setupFont() {
 }
 
 void initBystanders() {
-  bystanders_data = new Vector<BystanderData>();
+  bystanders_data = new ArrayList<BystanderData>();
   bystanders_data.add(new BystanderData(128,188,255,1.05));
   bystanders_data.add(new BystanderData(188,255,128,1.025));
   bystanders_data.add(new BystanderData(255,128,188,1.0));

@@ -19,10 +19,13 @@ void displayText() {
 
 void displaySprites() {
   for (int i = 0; i < game_state.no_of_sprites; i++) {
+    // Randomization of when they start to move.
     if ((scenes.get(game_state.cur_scene).getScale()) * random(FOLLOW_UP, FOLLOW_UP*4) * ratio < (avatar.getX() - ((Bystander) bystanders.get(i)).getX()) && ((Bystander) bystanders.get(i)).getFrame() == 0 && game_state.frame % ((i + 1) * 2 + 3) == 0)
       ((Bystander) bystanders.get(i)).startAnim(1);
+    // When the shot scene is up, stop the guy at the beginning.
     if (game_state.cur_scene == SHOT_SCENE && ((Bystander) bystanders.get(i)).getFrame() == 0 && ((Bystander) bystanders.get(i)).getX() > -(((Bystander) bystanders.get(i)).getWidth() / 2))
       ((Bystander) bystanders.get(i)).stopAnim();
+      
     ((Bystander) bystanders.get(i)).display();
   }
 }

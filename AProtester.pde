@@ -1,26 +1,27 @@
 Animation animation;
 
-// import ddf.minim.*;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 GameState game_state = new GameState();
-Vector<Scene> scenes = new Vector<Scene>();
-Vector<Bystander> bystanders = new Vector<Bystander>();
-Vector<BystanderData> bystanders_data = new Vector<BystanderData>();
+ArrayList<Scene> scenes = new ArrayList<Scene>();
+ArrayList<Bystander> bystanders = new ArrayList<Bystander>();
+ArrayList<BystanderData> bystanders_data = new ArrayList<BystanderData>();
+ArrayList< ArrayList< String > > texts = new ArrayList< ArrayList< String > >();
+
 Avatar avatar;
 Animation walk;
 Animation walkw;
+
 boolean sound;
 PImage sound_im;
 PImage no_sound;
 
 void setup() {
 
-  size(480, 320);
-  // size(800, 600);
+  size(480, 320); 
   frameRate(25);
-  // orientation(LANDSCAPE);
+  orientation(LANDSCAPE);
 
   initialize();
   game_state.scene_type = HOME;
@@ -33,13 +34,15 @@ void draw() {
   if (game_state.dont_draw <= 0) {
     displayScene();
     displaySprites();
+    
     tint(255, 255);
     avatar.display();
+    
     displayText();
     if (sound)
-      image(no_sound, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+      image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
     else
-      image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
+      image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
     
     // Cover the overlaping areas with black 
     fill(0,255);
@@ -93,7 +96,7 @@ void reactToEvents() {
 
 // React to mouse input (button is pressed event).
 void reactToMouse() {
-  if (mouseX > win_x && mouseX < (win_x + Math.round(50.0 * ratio)) && mouseY < win_height + win_y && mouseY  > win_height + win_y - Math.round(50.0 * ratio)) {
+  if (mouseX > win_x && mouseX < (win_x + sound_ico_size) && mouseY < win_height + win_y && mouseY  > win_height + win_y - sound_ico_size) {
     // Switch the sound
     sound = !sound;
   } else if (avatar.isRightFrom(mouseX)) {

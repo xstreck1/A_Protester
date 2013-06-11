@@ -45,11 +45,15 @@ void draw() {
       image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
     
     // Cover the overlaping areas with black 
-    fill(0,255);
-    rect(0,0, win_x,win_height);
-    rect(0,0, win_width,win_y);    
-    rect(win_x + win_width, 0, win_x,win_height);
-    rect(0,win_y + win_height, win_width,win_y);   
+    if (win_x != 0) {
+      fill(0,255);
+      rect(0,0, win_x,win_height);
+      rect(win_x + win_width, 0, win_x,win_height);
+    } else if (win_y != 0) {
+      fill(0,255);
+      rect(0,0, win_width,win_y);    
+      rect(0,win_y + win_height, win_width,win_y); 
+    }
   } else {
     --game_state.dont_draw;
   }

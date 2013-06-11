@@ -63,7 +63,7 @@ class Sprite {
     y = _y * ratio + win_y;
     d_x = _d_x * ratio;
     d_y = _d_y * ratio;
-    scale = _scale * ratio;
+    scale = _scale * ratio * 10;
     my_width = Math.round(animation.getWidth() * scale);
     my_height = Math.round(animation.getHeight() * scale);
   }

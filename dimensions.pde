@@ -19,6 +19,7 @@ final int FONT_APPEAR_ALPHA = 25;
 final int PURPOSED_FONT_SIZE = 24;
 int font_size = 0;
 final int PURPOSED_TEXT_LINE = 50;
+int font_line = 0;
 
 // Bystander move
 final int FOLLOW_START = 70;
@@ -42,5 +43,6 @@ void initDimensions() {
   println (width + " " + height );
   println (ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height); 
   font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
+  font_line = win_y + Math.round(win_height * 1.0 / 6.0) - font_size;
   sound_ico_size = Math.round(50 * ratio);
 }

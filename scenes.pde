@@ -8,8 +8,8 @@ final float WIDTH_PER_STEP = 0.8; // Percents of window per step
 void createScenes() {
   scenes = new ArrayList<Scene>();
   // All set up based on the properties of the background.
-  scenes.add(new Scene(0, 1.05, 5, 30, 60, 0));
-  scenes.add(new Scene(1, 2.95, -440, 40, 100, 1));
+  scenes.add(new Scene(0, 1.05, 5, 30, 90, 0));
+  scenes.add(new Scene(1, 2.95, -440, 40, 90, 1));
   scenes.add(new Scene(2, 1.25, -60, 20, 50, 2));
   scenes.add(new Scene(3, 1.02, -0, 20, 50, 3));
   scenes.add(new Scene(4, 1.42, -40, 20, 50, 4));  

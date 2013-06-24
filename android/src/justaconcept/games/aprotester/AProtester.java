@@ -1,54 +1,28 @@
 package justaconcept.games.aprotester;
 
-import java.util.Vector;
-
-import justaconcept.games.aprotester.R;
+import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
-import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.view.Display;
+import android.os.Bundle;
 
 public class AProtester extends PApplet {
-
-    Animation animation;
-
-    // import ddf.minim.*;
-
-    GameState game_state = new GameState();
-    Vector<Scene> scenes = new Vector<Scene>();
-    Vector<Bystander> bystanders = new Vector<Bystander>();
-    Vector<BystanderData> bystanders_data = new Vector<BystanderData>();
     MediaPlayer media_player;
-    Avatar avatar;
-    Animation walk;
-    Animation walkw;
-    boolean sound;
-    PImage sound_im;
-    PImage no_sound;
 
-    public void setup() {
-
-	// size(800, 600);
-	frameRate(25);
-	orientation(LANDSCAPE);
-
-	initialize();
-	game_state.scene_type = HOME;
-	game_state.cur_scene = 0;
-	setScene();
+    public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
     }
     
-    @Override 
+    @Override
     public void onPause() {
 	super.onPause();
 	media_player.stop();
     }
-    
-    @Override 
+
+    @Override
     public void onResume() {
 	super.onResume();
 	media_player = MediaPlayer.create(getApplicationContext(), R.raw.background);
@@ -57,25 +31,64 @@ public class AProtester extends PApplet {
 	media_player.start();
     }
 
+    public int sketchWidth() {
+	println(getWindowManager().getDefaultDisplay().getWidth());
+	return getWindowManager().getDefaultDisplay().getWidth();
+    }
+
+    public int sketchHeight() {
+	println(getWindowManager().getDefaultDisplay().getHeight());
+	return getWindowManager().getDefaultDisplay().getHeight();
+    }
+
+    GameState game_state = new GameState();
+    ArrayList<Scene> scenes = new ArrayList<Scene>();
+    ArrayList<Bystander> bystanders = new ArrayList<Bystander>();
+    ArrayList<BystanderData> bystanders_data = new ArrayList<BystanderData>();
+    ArrayList<ArrayList<String>> texts = new ArrayList<ArrayList<String>>();
+
+    Avatar avatar;
+    Animation walk;
+    Animation walkw;
+
+    boolean sound;
+    PImage sound_im;
+    PImage no_sound;
+
+    public void setup() {
+	frameRate(25);
+	background(22,22,220);
+	initialize();
+	game_state.scene_type = HOME;
+	game_state.cur_scene = 0;
+	setScene();
+    }
 
     public void draw() {
-	// Display objects.
+	// Display objects (during normal workflow).
 	if (game_state.dont_draw <= 0) {
 	    displayScene();
 	    displaySprites();
+
 	    tint(255, 255);
 	    avatar.display();
-	    displayText();
-	    if (sound)
-		image(no_sound, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
-	    else
-		image(sound_im, win_x, win_height + win_y - Math.round(50 * ratio), Math.round(50 * ratio), Math.round(50 * ratio));
 
-	    fill(0, 255);
-	    rect(0, 0, win_x, win_height);
-	    rect(0, 0, win_width, win_y);
-	    rect(win_x + win_width, 0, win_x, win_height);
-	    rect(0, win_y + win_height, win_width, win_y);
+	    displayText();
+	    if (!sound)
+		image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+	    else
+		image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+
+	    // Cover the overlaping areas with black
+	    if (win_x != 0) {
+		fill(0, 255);
+		rect(0, 0, win_x, win_height);
+		rect(win_x + win_width, 0, win_x, win_height);
+	    } else if (win_y != 0) {
+		fill(0, 255);
+		rect(0, 0, win_width, win_y);
+		rect(0, win_y + win_height, win_width, win_y);
+	    }
 	} else {
 	    --game_state.dont_draw;
 	}
@@ -83,11 +96,9 @@ public class AProtester extends PApplet {
 	controlFading();
 
 	game_state.frame++;
-	
-	if (game_state.finished == true && mousePressed)
-	    finish();    
     }
 
+    // React to environment, if the workflow is not blocked.
     public void reactToEvents() {
 	// React to input / event
 	if (game_state.blocked <= 0) {
@@ -101,15 +112,19 @@ public class AProtester extends PApplet {
 		game_state.to_change = SECOND;
 		game_state.blocked = SECOND * 2;
 	    } else if (mousePressed) {
+		// React to mouse only if nothing else is scheduled.
 		reactToMouse();
 	    }
 	} else {
 	    game_state.blocked--;
+	    // Check timed events.
 
 	    if (game_state.to_mist > 0) {
+		// Start filling with smoke (white circles)
 		fillWithWhite();
 		game_state.to_mist--;
 		if (game_state.to_mist == 0) {
+		    // If the scene is filled, start a new one.
 		    lightUp();
 		}
 	    }
@@ -120,80 +135,27 @@ public class AProtester extends PApplet {
 	}
     }
 
-    void reactToMouse() {
-	if (mouseX > win_x && mouseX < (win_x + Math.round(50.0 * ratio)) && mouseY < win_height + win_y && mouseY > win_height + win_y - Math.round(50.0 * ratio)) {
+    // React to mouse input (button is pressed event).
+    public void reactToMouse() {
+	if (mouseX > win_x && mouseX < (win_x + sound_ico_size) && mouseY < win_height + win_y && mouseY > win_height + win_y - sound_ico_size) {
+	    // Switch the sound
 	    sound = !sound;
 	    if (sound) {
 		media_player.start();
 	    } else
 		media_player.pause();
 	} else if (avatar.isRightFrom(mouseX)) {
+	    // Move
 	    avatar.startAnim(1);
 	    game_state.blocked = avatar.getCount();
 	} else if (avatar.isLeftFrom(mouseX) && game_state.text_time <= 0) {
+	    // Display text
 	    game_state.cur_text = texts.get(game_state.scene_type - 1).get(0);
+	    // Recycle texts.
 	    if (texts.get(game_state.scene_type - 1).size() > 1)
 		texts.get(game_state.scene_type - 1).remove(0);
 	    game_state.text_time = SECOND;
 	}
-    }
-
-    // Scene type
-    final int HOME = 1;
-    final int WALK = 2;
-    final int APPROACH = 3;
-    final int INJURED = 4;
-
-    // Scene states
-    final int DOOR = 101;
-    final int WALL = 102;
-
-    final int SECOND = 25;
-
-    public class GameState {
-	int scene_type = 0;
-	int blocked = 0;
-	int cur_scene = 0;
-	String cur_text;
-	int text_time = 0;
-	int to_change = 0;
-	int to_begin = 0;
-	int to_mist = 0;
-	int dont_draw = 0;
-	int to_visible = 0;
-	int to_end = 0;
-	int no_of_sprites = 0;
-	int frame = 0;
-	boolean finished = false;
-    };
-
-    Vector<Vector<String>> texts = new Vector<Vector<String>>();
-
-    public void initTexts() {
-	texts = new Vector<Vector<String>>();
-	Vector<String> scene_text = new Vector<String>();
-	scene_text.add("It Is Happening Out There");
-	scene_text.add("Everyone Is Out");
-	scene_text.add("I Have To Go");
-	scene_text.add("The Door Is The Way");
-	texts.add(scene_text);
-	scene_text = new Vector<String>();
-	scene_text.add("There Is No Way Back");
-	scene_text.add("I Am Part Of This Now");
-	scene_text.add("I Can't Back Out Now");
-	scene_text.add("Everyone Sees Me");
-	scene_text.add("Only One Way To Go");
-	texts.add(scene_text);
-	scene_text = new Vector<String>();
-	scene_text.add("I Can't Believe It's Happening");
-	scene_text.add("So Much Violence");
-	scene_text.add("I Must Retain Hope");
-	scene_text.add("I Must Persist");
-	texts.add(scene_text);
-	scene_text = new Vector<String>();
-	scene_text.add("There he is...");
-	scene_text.add("Why?");
-	texts.add(scene_text);
     }
 
     final int PURPOSED_WIDTH = 480;
@@ -215,16 +177,16 @@ public class AProtester extends PApplet {
     final int PURPOSED_FONT_SIZE = 24;
     int font_size = 0;
     final int PURPOSED_TEXT_LINE = 50;
+    int font_line = 0;
 
     // Bystander move
     final int FOLLOW_START = 70;
     final int FOLLOW_UP = 50;
 
-    public void initDimensions() {
-	setWindow();
-    }
+    float sound_ico_size = 0.0f;
 
-    public void setWindow() {
+    // Change the size based on resolution.
+    public void initDimensions() {
 	if ((float) width / (float) height < (float) PURPOSED_WIDTH / (float) PURPOSED_HEIGHT) {
 	    ratio = (float) width / (float) PURPOSED_WIDTH;
 	    win_width = width;
@@ -239,6 +201,8 @@ public class AProtester extends PApplet {
 	println(width + " " + height);
 	println(ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height);
 	font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
+	font_line = win_y + Math.round(win_height * 1.0f / 6.0f) - font_size;
+	sound_ico_size = Math.round(50 * ratio);
     }
 
     public void displayScene() {
@@ -252,7 +216,7 @@ public class AProtester extends PApplet {
 	    textSize(font_size);
 
 	    fill(0, 255);
-	    rect(win_x, win_y + Math.round(win_height * 1.0f / 6.0f) - font_size, win_width, font_size * 2);
+	    rect(win_x, font_line, win_width, font_size * 2);
 	    fill(255, 255);
 	    textOut(1.0f, game_state.cur_text);
 	}
@@ -260,12 +224,15 @@ public class AProtester extends PApplet {
 
     public void displaySprites() {
 	for (int i = 0; i < game_state.no_of_sprites; i++) {
+	    // Randomization of when they start to move.
 	    if ((scenes.get(game_state.cur_scene).getScale()) * random(FOLLOW_UP, FOLLOW_UP * 4) * ratio < (avatar.getX() - ((Bystander) bystanders.get(i)).getX())
 		    && ((Bystander) bystanders.get(i)).getFrame() == 0 && game_state.frame % ((i + 1) * 2 + 3) == 0)
 		((Bystander) bystanders.get(i)).startAnim(1);
+	    // When the shot scene is up, stop the guy at the beginning.
 	    if (game_state.cur_scene == SHOT_SCENE && ((Bystander) bystanders.get(i)).getFrame() == 0
 		    && ((Bystander) bystanders.get(i)).getX() > -(((Bystander) bystanders.get(i)).getWidth() / 2))
 		((Bystander) bystanders.get(i)).stopAnim();
+
 	    ((Bystander) bystanders.get(i)).display();
 	}
     }
@@ -356,8 +323,8 @@ public class AProtester extends PApplet {
 	createScenes();
 	initTexts();
 	initBystanders();
-	walk = new Animation("walk", 20);
-	walkw = new Animation("walkw", 20);
+	walk = new Animation("walk", 1);
+	walkw = new Animation("walkw", 1);
 	sound_im = loadImage("sound.png");
 	no_sound = loadImage("nosound.png");
 	sound = true;
@@ -370,7 +337,7 @@ public class AProtester extends PApplet {
     }
 
     public void initBystanders() {
-	bystanders_data = new Vector<BystanderData>();
+	bystanders_data = new ArrayList<BystanderData>();
 	bystanders_data.add(new BystanderData(128, 188, 255, 1.05f));
 	bystanders_data.add(new BystanderData(188, 255, 128, 1.025f));
 	bystanders_data.add(new BystanderData(255, 128, 188, 1.0f));
@@ -394,15 +361,17 @@ public class AProtester extends PApplet {
 	    }
 	}
 
-	public void display(int frame, float xpos, float ypos, float scale) {
-	    float my_width = Math.round(images[0].width * scale);
-	    float my_height = Math.round(images[0].height * scale);
+	public void display(int frame, float xpos, float ypos, int my_width, int my_height) {
 	    // println(xpos + " " + ypos + " " + my_width + " " + my_height);
 	    image(images[frame], xpos, ypos, my_width, my_height);
 	}
 
 	public int getWidth() {
 	    return images[0].width;
+	}
+
+	public int getHeight() {
+	    return images[0].height;
 	}
 
 	public int getCount() {
@@ -416,6 +385,8 @@ public class AProtester extends PApplet {
 	float y;
 	float d_x;
 	float d_y;
+	int my_width;
+	int my_height;
 	float scale;
 	int animation_steps;
 	Animation animation;
@@ -427,7 +398,7 @@ public class AProtester extends PApplet {
 		x += d_x;
 		y += d_y;
 	    }
-	    animation.display(frame, x, y, scale);
+	    animation.display(frame, x, y, my_width, my_height);
 	}
 
 	Sprite(Animation _animation, float _x, float _y, float _d_x, float _d_y, float _scale) {
@@ -438,6 +409,8 @@ public class AProtester extends PApplet {
 	    d_x = _d_x * ratio;
 	    d_y = _d_y * ratio;
 	    scale = _scale * ratio;
+	    my_width = Math.round(animation.getWidth() * scale);
+	    my_height = Math.round(animation.getHeight() * scale);
 	}
 
 	public void setAnimation(Animation _animation) {
@@ -547,9 +520,10 @@ public class AProtester extends PApplet {
     final float WIDTH_PER_STEP = 0.8f; // Percents of window per step
 
     public void createScenes() {
-	scenes = new Vector<Scene>();
-	scenes.add(new Scene(0, 1.05f, 5, 30, 110, 0));
-	scenes.add(new Scene(1, 2.95f, -440, 40, 100, 1));
+	scenes = new ArrayList<Scene>();
+	// All set up based on the properties of the background.
+	scenes.add(new Scene(0, 1.05f, 5, 30, 100, 0));
+	/*scenes.add(new Scene(1, 2.95f, -440, 40, 90, 1));
 	scenes.add(new Scene(2, 1.25f, -60, 20, 50, 2));
 	scenes.add(new Scene(3, 1.02f, -0, 20, 50, 3));
 	scenes.add(new Scene(4, 1.42f, -40, 20, 50, 4));
@@ -558,7 +532,7 @@ public class AProtester extends PApplet {
 	scenes.add(new Scene(7, 0.93f, -5, 10, 35, 0));
 	scenes.add(new Scene(8, 1.55f, -200, 20, 40, 0));
 	scenes.add(new Scene(9, 1.3f, -65, 15, 60, 0));
-	scenes.add(new Scene(10, 0.82f, 25, 10, 50, 0));
+	scenes.add(new Scene(10, 0.82f, 25, 10, 50, 0));*/
     }
 
     public class Scene {
@@ -635,7 +609,7 @@ public class AProtester extends PApplet {
 	float d_x = WIDTH_PER_STEP * scale * PURPOSED_WIDTH / 100.0f;
 	float d_y = 0.0f;
 
-	// Set avatar type
+	// Sete avatar type
 	if (game_state.scene_type == HOME || game_state.scene_type == WALK) {
 	    avatar = new Avatar(walk, av_x, av_y, d_x, d_y, scale, av_width);
 	} else if (game_state.scene_type == APPROACH || game_state.scene_type == INJURED) {
@@ -644,7 +618,7 @@ public class AProtester extends PApplet {
 	    println("Errorneous scene type.");
 	}
 
-	bystanders = new Vector<Bystander>();
+	bystanders = new ArrayList<Bystander>();
 	game_state.no_of_sprites = scenes.get(game_state.cur_scene).getByNo();
 	for (int i = 0; i < game_state.no_of_sprites; i++) {
 	    bystanders.add(new Bystander(bystanders_data.get(i), (i % 2 == 0) ? walk : walkw, av_x - (random(FOLLOW_START, FOLLOW_START * 4) * ratio * scale), av_y, d_x, d_y,
@@ -677,13 +651,59 @@ public class AProtester extends PApplet {
 	game_state.to_end = SECOND * 15;
     }
 
-    public int sketchWidth() {
-	println(getWindowManager().getDefaultDisplay().getWidth());
-	return getWindowManager().getDefaultDisplay().getWidth();
-    }
+    // Scene type
+    final int HOME = 1;
+    final int WALK = 2;
+    final int APPROACH = 3;
+    final int INJURED = 4;
 
-    public int sketchHeight() {
-	println(getWindowManager().getDefaultDisplay().getHeight());
-	return getWindowManager().getDefaultDisplay().getHeight();
+    // Scene states
+    final int DOOR = 101;
+    final int WALL = 102;
+
+    final int SECOND = 25;
+
+    public class GameState {
+	int scene_type = 0;
+	int blocked = 0;
+	int cur_scene = 0;
+	String cur_text;
+	int text_time = 0;
+	int to_change = 0;
+	int to_begin = 0;
+	int to_mist = 0;
+	int dont_draw = 0;
+	int to_visible = 0;
+	int to_end = 0;
+	int no_of_sprites = 0;
+	int frame = 0;
+	boolean finished = false;
+    };
+
+    public void initTexts() {
+	texts = new ArrayList<ArrayList<String>>();
+	ArrayList<String> scene_text = new ArrayList<String>();
+	scene_text.add("It Is Happening Out There");
+	scene_text.add("Everyone Is Out");
+	scene_text.add("I Have To Go");
+	scene_text.add("The Door Is The Way");
+	texts.add(scene_text);
+	scene_text = new ArrayList<String>();
+	scene_text.add("There Is No Way Back");
+	scene_text.add("I Am Part Of This Now");
+	scene_text.add("I Can't Back Out Now");
+	scene_text.add("Everyone Sees Me");
+	scene_text.add("Only One Way To Go");
+	texts.add(scene_text);
+	scene_text = new ArrayList<String>();
+	scene_text.add("I Can't Believe It's Happening");
+	scene_text.add("So Much Violence");
+	scene_text.add("I Must Retain Hope");
+	scene_text.add("I Must Persist");
+	texts.add(scene_text);
+	scene_text = new ArrayList<String>();
+	scene_text.add("There he is...");
+	scene_text.add("Why?");
+	texts.add(scene_text);
     }
 }

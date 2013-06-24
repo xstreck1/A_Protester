@@ -1,5 +1,3 @@
-Animation animation;
-
 import java.util.Map;
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ void setup() {
 
   size(480, 320); 
   frameRate(25);
-  orientation(LANDSCAPE);
+  // orientation(LANDSCAPE);
 
   initialize();
   game_state.scene_type = HOME;
@@ -39,7 +37,7 @@ void draw() {
     avatar.display();
     
     displayText();
-    if (sound)
+    if (!sound)
       image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
     else
       image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);

@@ -9,7 +9,7 @@ void initialize() {
   walkw = new Animation("walkw", 20);
   sound_im = loadImage("sound.png");
   no_sound = loadImage("nosound.png");
-  sound = false;
+  sound = true;
 }
 
 void setupFont() {

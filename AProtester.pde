@@ -29,7 +29,7 @@ void draw() {
   } else if (loaded == 1) {
     initialize();
     game_state.scene_type = HOME;
-    game_state.cur_scene = 0;
+    game_state.cur_scene = 6;
     setScene();
     loaded++;
   } else {
@@ -77,7 +77,7 @@ void reactToEvents() {
       setUpTheFall();
     } else if (!avatar.isRightFrom(win_width - scenes.get(game_state.cur_scene).getRightBorder())) {// Control scene change.
       game_state.to_change = SECOND;
-      game_state.blocked = SECOND * 2;
+      game_state.blocked = SECOND;
     } else if (mousePressed) {
       // React to mouse only if nothing else is scheduled.
       reactToMouse();

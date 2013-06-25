@@ -100,8 +100,8 @@ void setUpTheShot() {
   avatar.animateOnce();
   avatar.stopMove();
   avatar.move(-226.0, -78.0, 3.0,1.25);
-  game_state.blocked = SECOND * 8;
-  game_state.to_mist = SECOND * 8;
+  game_state.blocked = SECOND * 7;
+  game_state.to_mist = SECOND * 7;
 }
 
 void setUpTheFall() {

@@ -8,7 +8,7 @@ void drawLoading() {
       size /= 2.0;
       textSize(size);
     } while (textWidth(LOADING) > width);
-    text(LOADING, (width - textWidth(LOADING)) / 2  , (height) / 2 );  
+    text(LOADING, (width - textWidth(LOADING)) /2, (height) /2);  
 }
 
 void displayScene() {
@@ -69,7 +69,7 @@ void controlFading() {
     if (--game_state.to_change <= 0) {
       game_state.cur_scene++;
       setScene();
-      game_state.to_begin = SECOND * 2;
+      game_state.to_begin = SECOND;
     }
   }
   if (--game_state.to_begin > 0) {

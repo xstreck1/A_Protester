@@ -38,7 +38,7 @@ void fillWithWhite() {
   if (to_fill > 0) {
     game_state.dont_draw = 1;
   }
-  ellipse(win_width/2 + win_x, win_height + win_y - scenes.get(game_state.cur_scene).getFloor() * ratio, to_fill, to_fill);
+  ellipse(win_width/2 + win_x, win_height + win_y + scenes.get(game_state.cur_scene).getFloor() * ratio, to_fill, to_fill);
 }
 
 void lightUp() {

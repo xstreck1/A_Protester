@@ -4,7 +4,7 @@ final int PURPOSED_WIDTH = 480;
 final int PURPOSED_HEIGHT = 320;
 
 final float AVATAR_UP = 52.0;
-final float AVATAR_WIDHT = 30.0;
+final float AVATAR_WIDHT = 10.0;
 int win_width = 0;
 int win_height = 0;
 int win_x = 0;

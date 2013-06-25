@@ -2,10 +2,10 @@ import java.util.Map;
 import java.util.ArrayList;
 
 GameState game_state = new GameState();
-ArrayList<Scene> scenes = new ArrayList<Scene>();
-ArrayList<Bystander> bystanders = new ArrayList<Bystander>();
-ArrayList<BystanderData> bystanders_data = new ArrayList<BystanderData>();
-ArrayList< ArrayList< String > > texts = new ArrayList< ArrayList< String > >();
+ArrayList<Scene> scenes;
+ArrayList<Bystander> bystanders;
+ArrayList<BystanderData> bystanders_data;
+ArrayList< ArrayList< String > > texts;
 
 Avatar avatar;
 Animation walk;
@@ -19,11 +19,13 @@ void setup() {
 
   size(480, 320); 
   frameRate(25);
-  // orientation(LANDSCAPE);
+  orientation(LANDSCAPE);
+  smooth(0);
+  noSmooth();
 
   initialize();
-  game_state.scene_type = HOME;
-  game_state.cur_scene = 0;
+  game_state.scene_type = INJURED;
+  game_state.cur_scene = 10;
   setScene();
 }
 

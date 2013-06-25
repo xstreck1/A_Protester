@@ -3,22 +3,22 @@ import java.util.ArrayList;
 final int SHOT_SCENE = 6;
 final int FALL_SCENE = 10;
 
-final float WIDTH_PER_STEP = 0.8; // Percents of window per step
+final float WIDTH_PER_STEP = 0.8; // Percents of window per ste
 
 void createScenes() {
   scenes = new ArrayList<Scene>();
   // All set up based on the properties of the background.
-  scenes.add(new Scene(0, 1.05, 5, 30, 100, 0));
-  scenes.add(new Scene(1, 2.95, -440, 40, 90, 1));
-  scenes.add(new Scene(2, 1.25, -60, 20, 50, 2));
-  scenes.add(new Scene(3, 1.02, -0, 20, 50, 3));
-  scenes.add(new Scene(4, 1.42, -40, 20, 50, 4));  
-  scenes.add(new Scene(5, 0.82, 10, 20, 30, 5)); 
-  scenes.add(new Scene(6, 0.82, 25, 10, 30, 1));  
-  scenes.add(new Scene(7, 0.93, -5, 10, 35, 0));  
-  scenes.add(new Scene(8, 1.55, -200, 20, 40, 0));  
-  scenes.add(new Scene(9, 1.3, -65, 15, 60, 0));  
-  scenes.add(new Scene(10, 0.82, 25, 10, 50, 0));   
+  scenes.add(new Scene(0, 1.0, -50, 190, 100, 0));
+  scenes.add(new Scene(1, 2.45, -470, 410, 90, 1));
+  scenes.add(new Scene(2, 1.10, -80, 210, 80, 2));
+  scenes.add(new Scene(3, 0.95, -40, 180, 70, 3));
+  scenes.add(new Scene(4, 1.32, -85, 250, 70, 4));  
+  scenes.add(new Scene(5, 0.76, -30, 150, 70, 5)); 
+  scenes.add(new Scene(6, 0.82, -25, 150, 0, 1));  
+  scenes.add(new Scene(7, 0.92, -65, 180, 95, 0));  
+  scenes.add(new Scene(8, 1.45, -260, 260, 40, 0));  
+  scenes.add(new Scene(9, 1.22, -125, 220, 60, 0));  
+  scenes.add(new Scene(10, 0.82, -19, 150, 50, 0));   
 }
 
 public class Scene {
@@ -99,7 +99,7 @@ void setUpTheShot() {
   avatar.setAnimation(shot);
   avatar.animateOnce();
   avatar.stopMove();
-  avatar.move(-50.0, -50.0);
+  avatar.move(-226.0, -78.0, 3.0,1.25);
   game_state.blocked = SECOND * 8;
   game_state.to_mist = SECOND * 8;
 }
@@ -109,6 +109,7 @@ void setUpTheFall() {
   avatar.setAnimation(fall);
   avatar.animateOnce();
   avatar.stopMove();
+  avatar.move(31.0, 0.0, 2.1,0.96);
   game_state.blocked = Integer.MAX_VALUE; // Block forever.
   game_state.to_end = SECOND * 15; 
 }

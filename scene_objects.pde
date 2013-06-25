@@ -21,14 +21,6 @@ class Animation {
     image(images[frame], xpos, ypos, my_width, my_height); 
   }
   
-  int getWidth() {
-    return images[0].width;
-  }
-  
-  int getHeight() {
-    return images[0].height;
-  }
-  
   int getCount() {
     return image_count;
   }
@@ -64,8 +56,8 @@ class Sprite {
     d_x = _d_x * ratio;
     d_y = _d_y * ratio;
     scale = _scale * ratio;
-    my_width = Math.round(animation.getWidth() * scale);
-    my_height = Math.round(animation.getHeight() * scale);
+    my_width = Math.round(animation.images[0].width * scale);
+    my_height = Math.round(animation.images[0].height * scale);
   }
   
   void setAnimation(Animation _animation) {
@@ -108,8 +100,12 @@ class Sprite {
   }
   
   float getWidth() {
-    return (animation.getWidth() * scale);
+    return my_width;
   }
+  
+  float getHeight() {
+    return my_height;
+  }  
   
   int getFrame() {
     return frame;
@@ -124,9 +120,11 @@ class Avatar extends Sprite {
     av_width = _av_width;
   }
   
-  void move(float _x, float _y) {
+  void move(float _x, float _y, float _width, float _height) {
     x += _x * scale;
     y += _y * scale;
+    my_width *= _width;
+    my_height *= _height;
   }
   
   boolean isRightFrom(int _x) {

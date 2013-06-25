@@ -16,51 +16,55 @@ PImage sound_im;
 PImage no_sound;
 
 void setup() {
-
   size(480, 320); 
   frameRate(25);
   orientation(LANDSCAPE);
-  smooth(0);
-  noSmooth();
-
-  initialize();
-  game_state.scene_type = INJURED;
-  game_state.cur_scene = 10;
-  setScene();
+  setupFont();
 }
 
 void draw() {
-  // Display objects (during normal workflow).
-  if (game_state.dont_draw <= 0) {
-    displayScene();
-    displaySprites();
-    
-    tint(255, 255);
-    avatar.display();
-    
-    displayText();
-    if (!sound)
-      image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
-    else
-      image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
-    
-    // Cover the overlaping areas with black 
-    if (win_x != 0) {
-      fill(0,255);
-      rect(0,0, win_x,win_height);
-      rect(win_x + win_width, 0, win_x,win_height);
-    } else if (win_y != 0) {
-      fill(0,255);
-      rect(0,0, win_width,win_y);    
-      rect(0,win_y + win_height, win_width,win_y); 
-    }
+  if (loaded == 0) {
+    drawLoading();
+    loaded++;
+  } else if (loaded == 1) {
+    initialize();
+    game_state.scene_type = HOME;
+    game_state.cur_scene = 0;
+    setScene();
+    loaded++;
   } else {
-    --game_state.dont_draw;
+    // Display objects (during normal workflow).
+    if (game_state.dont_draw <= 0) {
+      displayScene();
+      displaySprites();
+      
+      tint(255, 255);
+      avatar.display();
+      
+      displayText();
+      if (!sound)
+        image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+      else
+        image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+      
+      // Cover the overlaping areas with black 
+      if (win_x != 0) {
+        fill(0,255);
+        rect(0,0, win_x,win_height);
+        rect(win_x + win_width, 0, win_x,win_height);
+      } else if (win_y != 0) {
+        fill(0,255);
+        rect(0,0, win_width,win_y);    
+        rect(0,win_y + win_height, win_width,win_y); 
+      }
+    } else {
+      --game_state.dont_draw;
+    }
+    reactToEvents();
+    controlFading();
+    
+    game_state.frame++;
   }
-  reactToEvents();
-  controlFading();
-  
-  game_state.frame++;
 }
 
 // React to environment, if the workflow is not blocked.

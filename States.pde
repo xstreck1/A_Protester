@@ -12,6 +12,8 @@ final int WALL = 102;
 
 final int SECOND = 25;
 
+int loaded = 0;
+
 public class GameState {
   int scene_type = 0;
   int blocked = 0;

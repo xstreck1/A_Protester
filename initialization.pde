@@ -14,7 +14,7 @@ void initialize() {
 
 void setupFont() {
   PFont text_font;
-  text_font = loadFont("text_font.vlw");
+  text_font = createFont("text_font.vlw", 32, true);
   textFont(text_font);
 }
 

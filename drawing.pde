@@ -1,4 +1,15 @@
-import java.util.Vector;
+void drawLoading() {
+    fill(0);
+    rect(0,0, width, height);
+    fill(255);
+    String LOADING = "LOADING";
+    float size = height;
+    do {
+      size /= 2.0;
+      textSize(size);
+    } while (textWidth(LOADING) > width);
+    text(LOADING, (width - textWidth(LOADING)) / 2  , (height) / 2 );  
+}
 
 void displayScene() {
   background(0, 0, 0);

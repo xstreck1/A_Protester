@@ -29,6 +29,7 @@ public class GameState {
   int no_of_sprites = 0;
   int frame = 0;
   boolean finished = false;
+  PImage background;
 };
 
 void initTexts() {

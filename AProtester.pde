@@ -30,6 +30,7 @@ void draw() {
     initialize();
     game_state.scene_type = HOME;
     game_state.cur_scene = 6;
+    game_state.background = loadImage(scenes.get(game_state.cur_scene).background); 
     setScene();
     loaded++;
   } else {
@@ -99,6 +100,11 @@ void reactToEvents() {
     if (game_state.to_end-- > 0) {
       showEnd();
     }
+    
+    /* ANDROID
+    if (game_state.finished && mousePressed)
+      finish(); 
+    */
   }
 }
 
@@ -107,6 +113,12 @@ void reactToMouse() {
   if (mouseX > win_x && mouseX < (win_x + sound_ico_size) && mouseY < win_height + win_y && mouseY  > win_height + win_y - sound_ico_size) {
     // Switch the sound
     sound = !sound;
+    /* ANDROID
+          if (sound) {
+    media_player.start();
+      } else
+    media_player.pause();
+    */
   } else if (avatar.isRightFrom(mouseX)) {
     // Move
     avatar.startAnim(1);

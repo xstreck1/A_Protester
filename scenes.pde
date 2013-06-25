@@ -18,12 +18,12 @@ void createScenes() {
   scenes.add(new Scene(7, 0.92, -65, 180, 95, 0));  
   scenes.add(new Scene(8, 1.45, -260, 260, 40, 0));  
   scenes.add(new Scene(9, 1.22, -125, 220, 60, 0));  
-  scenes.add(new Scene(10, 0.82, -19, 150, 50, 0));   
+  scenes.add(new Scene(10, 0.82, -19, 150, 50, 0));  
 }
 
 public class Scene {
   float scale;
-  PImage background;
+  String background;
   int floor;
   int left_border;
   int right_border;
@@ -31,7 +31,7 @@ public class Scene {
   
   Scene(int _scene_no, float _scale, int _floor, int _left_border, int _right_border, int _bystanders) {
     scale = _scale;
-    background = loadImage("Scene" + _scene_no + ".jpg");
+    background = "Scene" + _scene_no + ".jpg";
     floor = _floor;
     left_border = _left_border;
     right_border = _right_border;
@@ -102,6 +102,14 @@ void setUpTheShot() {
   avatar.move(-226.0, -78.0, 3.0,1.25);
   game_state.blocked = SECOND * 7;
   game_state.to_mist = SECOND * 7;
+ /* ANDROID
+   if (sound) {
+      MediaPlayer shot_player;
+      shot_player = MediaPlayer.create(getApplicationContext(), R.raw.gun);
+      shot_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+      shot_player.start();
+  }
+  */
 }
 
 void setUpTheFall() {

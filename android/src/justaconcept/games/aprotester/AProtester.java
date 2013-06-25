@@ -15,7 +15,7 @@ public class AProtester extends PApplet {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     public void onPause() {
 	super.onPause();
@@ -42,10 +42,10 @@ public class AProtester extends PApplet {
     }
 
     GameState game_state = new GameState();
-    ArrayList<Scene> scenes = new ArrayList<Scene>();
-    ArrayList<Bystander> bystanders = new ArrayList<Bystander>();
-    ArrayList<BystanderData> bystanders_data = new ArrayList<BystanderData>();
-    ArrayList<ArrayList<String>> texts = new ArrayList<ArrayList<String>>();
+    ArrayList<Scene> scenes;
+    ArrayList<Bystander> bystanders;
+    ArrayList<BystanderData> bystanders_data;
+    ArrayList<ArrayList<String>> texts;
 
     Avatar avatar;
     Animation walk;
@@ -56,46 +56,55 @@ public class AProtester extends PApplet {
     PImage no_sound;
 
     public void setup() {
+
 	frameRate(25);
-	background(22,22,220);
-	initialize();
-	game_state.scene_type = HOME;
-	game_state.cur_scene = 0;
-	setScene();
+	setupFont();
     }
 
     public void draw() {
-	// Display objects (during normal workflow).
-	if (game_state.dont_draw <= 0) {
-	    displayScene();
-	    displaySprites();
-
-	    tint(255, 255);
-	    avatar.display();
-
-	    displayText();
-	    if (!sound)
-		image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
-	    else
-		image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
-
-	    // Cover the overlaping areas with black
-	    if (win_x != 0) {
-		fill(0, 255);
-		rect(0, 0, win_x, win_height);
-		rect(win_x + win_width, 0, win_x, win_height);
-	    } else if (win_y != 0) {
-		fill(0, 255);
-		rect(0, 0, win_width, win_y);
-		rect(0, win_y + win_height, win_width, win_y);
-	    }
+	if (loaded == 0) {
+	    drawLoading();
+	    loaded++;
+	} else if (loaded == 1) {
+	    initialize();
+	    game_state.scene_type = HOME;
+	    game_state.cur_scene = 0;
+	    game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
+	    setScene();
+	    loaded++;
 	} else {
-	    --game_state.dont_draw;
-	}
-	reactToEvents();
-	controlFading();
+	    // Display objects (during normal workflow).
+	    if (game_state.dont_draw <= 0) {
+		displayScene();
+		displaySprites();
 
-	game_state.frame++;
+		tint(255, 255);
+		avatar.display();
+
+		displayText();
+		if (!sound)
+		    image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+		else
+		    image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+
+		// Cover the overlaping areas with black
+		if (win_x != 0) {
+		    fill(0, 255);
+		    rect(0, 0, win_x, win_height);
+		    rect(win_x + win_width, 0, win_x, win_height);
+		} else if (win_y != 0) {
+		    fill(0, 255);
+		    rect(0, 0, win_width, win_y);
+		    rect(0, win_y + win_height, win_width, win_y);
+		}
+	    } else {
+		--game_state.dont_draw;
+	    }
+	    reactToEvents();
+	    controlFading();
+
+	    game_state.frame++;
+	}
     }
 
     // React to environment, if the workflow is not blocked.
@@ -110,7 +119,7 @@ public class AProtester extends PApplet {
 													    // scene
 													    // change.
 		game_state.to_change = SECOND;
-		game_state.blocked = SECOND * 2;
+		game_state.blocked = SECOND;
 	    } else if (mousePressed) {
 		// React to mouse only if nothing else is scheduled.
 		reactToMouse();
@@ -132,6 +141,9 @@ public class AProtester extends PApplet {
 	    if (game_state.to_end-- > 0) {
 		showEnd();
 	    }
+	    
+	    if (game_state.finished && mousePressed)
+		finish();
 	}
     }
 
@@ -162,7 +174,7 @@ public class AProtester extends PApplet {
     final int PURPOSED_HEIGHT = 320;
 
     final float AVATAR_UP = 52.0f;
-    final float AVATAR_WIDHT = 30.0f;
+    final float AVATAR_WIDHT = 10.0f;
     int win_width = 0;
     int win_height = 0;
     int win_x = 0;
@@ -205,9 +217,22 @@ public class AProtester extends PApplet {
 	sound_ico_size = Math.round(50 * ratio);
     }
 
+    public void drawLoading() {
+	fill(0);
+	rect(0, 0, width, height);
+	fill(255);
+	String LOADING = "LOADING";
+	float size = height;
+	do {
+	    size /= 2.0f;
+	    textSize(size);
+	} while (textWidth(LOADING) > width);
+	text(LOADING, (width - textWidth(LOADING)) / 2, (height) / 2);
+    }
+
     public void displayScene() {
 	background(0, 0, 0);
-	image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
+	image(game_state.background, win_x, win_y, win_width, win_height);
     }
 
     public void displayText() {
@@ -245,13 +270,14 @@ public class AProtester extends PApplet {
 	if (to_fill > 0) {
 	    game_state.dont_draw = 1;
 	}
-	ellipse(win_width / 2 + win_x, win_height + win_y - scenes.get(game_state.cur_scene).getFloor() * ratio, to_fill, to_fill);
+	ellipse(win_width / 2 + win_x, win_height + win_y + scenes.get(game_state.cur_scene).getFloor() * ratio, to_fill, to_fill);
     }
 
     public void lightUp() {
 	fill(MIST_COL, 255);
 	rect(0, 0, win_width + win_x * 2, win_height + win_y * 2);
 	game_state.cur_scene++;
+	game_state.background = loadImage(scenes.get(game_state.cur_scene).background); 
 	game_state.scene_type = APPROACH;
 	setScene();
 	game_state.to_visible = SECOND * 6;
@@ -264,8 +290,9 @@ public class AProtester extends PApplet {
 	    rect(win_x, win_y, win_width, win_height);
 	    if (--game_state.to_change <= 0) {
 		game_state.cur_scene++;
+		game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
 		setScene();
-		game_state.to_begin = SECOND * 2;
+		game_state.to_begin = SECOND;
 	    }
 	}
 	if (--game_state.to_begin > 0) {
@@ -323,8 +350,8 @@ public class AProtester extends PApplet {
 	createScenes();
 	initTexts();
 	initBystanders();
-	walk = new Animation("walk", 1);
-	walkw = new Animation("walkw", 1);
+	walk = new Animation("walk", 20);
+	walkw = new Animation("walkw", 20);
 	sound_im = loadImage("sound.png");
 	no_sound = loadImage("nosound.png");
 	sound = true;
@@ -332,7 +359,7 @@ public class AProtester extends PApplet {
 
     public void setupFont() {
 	PFont text_font;
-	text_font = loadFont("text_font.vlw");
+	text_font = createFont("text_font.vlw", 32, true);
 	textFont(text_font);
     }
 
@@ -364,14 +391,6 @@ public class AProtester extends PApplet {
 	public void display(int frame, float xpos, float ypos, int my_width, int my_height) {
 	    // println(xpos + " " + ypos + " " + my_width + " " + my_height);
 	    image(images[frame], xpos, ypos, my_width, my_height);
-	}
-
-	public int getWidth() {
-	    return images[0].width;
-	}
-
-	public int getHeight() {
-	    return images[0].height;
 	}
 
 	public int getCount() {
@@ -409,8 +428,8 @@ public class AProtester extends PApplet {
 	    d_x = _d_x * ratio;
 	    d_y = _d_y * ratio;
 	    scale = _scale * ratio;
-	    my_width = Math.round(animation.getWidth() * scale);
-	    my_height = Math.round(animation.getHeight() * scale);
+	    my_width = Math.round(animation.images[0].width * scale);
+	    my_height = Math.round(animation.images[0].height * scale);
 	}
 
 	public void setAnimation(Animation _animation) {
@@ -452,7 +471,11 @@ public class AProtester extends PApplet {
 	}
 
 	public float getWidth() {
-	    return (animation.getWidth() * scale);
+	    return my_width;
+	}
+
+	public float getHeight() {
+	    return my_height;
 	}
 
 	public int getFrame() {
@@ -468,9 +491,11 @@ public class AProtester extends PApplet {
 	    av_width = _av_width;
 	}
 
-	public void move(float _x, float _y) {
+	public void move(float _x, float _y, float _width, float _height) {
 	    x += _x * scale;
 	    y += _y * scale;
+	    my_width *= _width;
+	    my_height *= _height;
 	}
 
 	public boolean isRightFrom(int _x) {
@@ -517,27 +542,27 @@ public class AProtester extends PApplet {
     final int SHOT_SCENE = 6;
     final int FALL_SCENE = 10;
 
-    final float WIDTH_PER_STEP = 0.8f; // Percents of window per step
+    final float WIDTH_PER_STEP = 0.8f; // Percents of window per ste
 
     public void createScenes() {
 	scenes = new ArrayList<Scene>();
 	// All set up based on the properties of the background.
-	scenes.add(new Scene(0, 1.05f, 5, 30, 100, 0));
-	/*scenes.add(new Scene(1, 2.95f, -440, 40, 90, 1));
-	scenes.add(new Scene(2, 1.25f, -60, 20, 50, 2));
-	scenes.add(new Scene(3, 1.02f, -0, 20, 50, 3));
-	scenes.add(new Scene(4, 1.42f, -40, 20, 50, 4));
-	scenes.add(new Scene(5, 0.82f, 10, 20, 30, 5));
-	scenes.add(new Scene(6, 0.82f, 25, 10, 30, 1));
-	scenes.add(new Scene(7, 0.93f, -5, 10, 35, 0));
-	scenes.add(new Scene(8, 1.55f, -200, 20, 40, 0));
-	scenes.add(new Scene(9, 1.3f, -65, 15, 60, 0));
-	scenes.add(new Scene(10, 0.82f, 25, 10, 50, 0));*/
+	scenes.add(new Scene(0, 1.0f, -50, 190, 100, 0));
+	scenes.add(new Scene(1, 2.45f, -470, 410, 90, 1));
+	scenes.add(new Scene(2, 1.10f, -80, 210, 80, 2));
+	scenes.add(new Scene(3, 0.95f, -40, 180, 70, 3));
+	scenes.add(new Scene(4, 1.32f, -85, 250, 70, 4));
+	scenes.add(new Scene(5, 0.76f, -30, 150, 70, 5));
+	scenes.add(new Scene(6, 0.82f, -25, 150, 0, 1));
+	scenes.add(new Scene(7, 0.92f, -65, 180, 95, 0));
+	scenes.add(new Scene(8, 1.45f, -260, 260, 40, 0));
+	scenes.add(new Scene(9, 1.22f, -125, 220, 60, 0));
+	scenes.add(new Scene(10, 0.82f, -19, 150, 50, 0));
     }
 
     public class Scene {
 	float scale;
-	PImage background;
+	String background;
 	int floor;
 	int left_border;
 	int right_border;
@@ -545,7 +570,7 @@ public class AProtester extends PApplet {
 
 	Scene(int _scene_no, float _scale, int _floor, int _left_border, int _right_border, int _bystanders) {
 	    scale = _scale;
-	    background = loadImage("Scene" + _scene_no + ".jpg");
+	    background = "Scene" + _scene_no + ".jpg";
 	    floor = _floor;
 	    left_border = _left_border;
 	    right_border = _right_border;
@@ -631,12 +656,12 @@ public class AProtester extends PApplet {
 	avatar.setAnimation(shot);
 	avatar.animateOnce();
 	avatar.stopMove();
-	avatar.move(-50.0f, -50.0f);
-	game_state.blocked = SECOND * 8;
-	game_state.to_mist = SECOND * 8;
+	avatar.move(-226.0f, -78.0f, 3.0f, 1.25f);
+	game_state.blocked = SECOND * 7;
+	game_state.to_mist = SECOND * 7;
 	if (sound) {
 	    MediaPlayer shot_player;
-	    shot_player = MediaPlayer.create(getApplicationContext(), R.raw.gun);
+	    shot_player = MediaPlayer.create(getApplicationContext(), R.raw.gun2);
 	    shot_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 	    shot_player.start();
 	}
@@ -647,6 +672,7 @@ public class AProtester extends PApplet {
 	avatar.setAnimation(fall);
 	avatar.animateOnce();
 	avatar.stopMove();
+	avatar.move(31.0f, 0.0f, 2.1f, 0.96f);
 	game_state.blocked = Integer.MAX_VALUE; // Block forever.
 	game_state.to_end = SECOND * 15;
     }
@@ -663,6 +689,8 @@ public class AProtester extends PApplet {
 
     final int SECOND = 25;
 
+    int loaded = 0;
+
     public class GameState {
 	int scene_type = 0;
 	int blocked = 0;
@@ -678,6 +706,7 @@ public class AProtester extends PApplet {
 	int no_of_sprites = 0;
 	int frame = 0;
 	boolean finished = false;
+	PImage background;
     };
 
     public void initTexts() {

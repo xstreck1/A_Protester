@@ -19,5 +19,6 @@ public final class R {
     public static final class raw {
         public static final int background=0x7f040000;
         public static final int gun=0x7f040001;
+        public static final int gun2=0x7f040002;
     }
 }

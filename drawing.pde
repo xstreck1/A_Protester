@@ -13,7 +13,7 @@ void drawLoading() {
 
 void displayScene() {
   background(0, 0, 0);
-  image(scenes.get(game_state.cur_scene).background, win_x, win_y, win_width, win_height);
+  image(game_state.background, win_x, win_y, win_width, win_height);
 }
 
 void displayText() {
@@ -56,6 +56,7 @@ void lightUp() {
   fill(MIST_COL, 255);
   rect(0, 0, win_width + win_x*2, win_height + win_y*2);
   game_state.cur_scene++;
+  game_state.background = loadImage(scenes.get(game_state.cur_scene).background); 
   game_state.scene_type = APPROACH;
   setScene();
   game_state.to_visible = SECOND * 6;
@@ -68,6 +69,7 @@ void controlFading() {
     rect(win_x, win_y, win_width, win_height);
     if (--game_state.to_change <= 0) {
       game_state.cur_scene++;
+      game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
       setScene();
       game_state.to_begin = SECOND;
     }

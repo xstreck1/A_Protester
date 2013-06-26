@@ -1,17 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="justaconcept.games.aprotester"
     android:versionCode="4"
     android:versionName="1.03" >
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="17" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="A Protester" >
-        <activity android:name="justaconcept.games.aprotester.AProtester" 
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape" >
+        <activity
+            android:name="justaconcept.games.aprotester.AProtester"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="justaconcept.games.aprotester.StartScreen"
+            android:label="@string/title_activity_start_screen"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

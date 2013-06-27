@@ -5,39 +5,56 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 public class AProtester extends PApplet {
+    SharedPreferences prefs;
+    SharedPreferences.Editor edit;
     MediaPlayer media_player;
+    MediaPlayer shot_sound_player;
 
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	edit = prefs.edit();
+
+	media_player = MediaPlayer.create(getApplicationContext(), R.raw.background);
+	media_player.setLooping(true);
+	media_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+	shot_sound_player = MediaPlayer.create(getApplicationContext(), R.raw.gun2);
+	shot_sound_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
 
     @Override
     public void onPause() {
 	super.onPause();
 	media_player.stop();
+	shot_sound_player.stop();	
     }
 
     @Override
     public void onResume() {
 	super.onResume();
-	media_player = MediaPlayer.create(getApplicationContext(), R.raw.background);
-	media_player.setLooping(true);
-	media_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-	media_player.start();
+
+	if (prefs.getBoolean("sound", false))
+	    media_player.start();
+    }
+
+    @Override
+    public void onStop() {
+	super.onStop();
     }
 
     public int sketchWidth() {
-	println(getWindowManager().getDefaultDisplay().getWidth());
 	return getWindowManager().getDefaultDisplay().getWidth();
     }
 
     public int sketchHeight() {
-	println(getWindowManager().getDefaultDisplay().getHeight());
 	return getWindowManager().getDefaultDisplay().getHeight();
     }
 
@@ -51,60 +68,48 @@ public class AProtester extends PApplet {
     Animation walk;
     Animation walkw;
 
-    boolean sound;
-    PImage sound_im;
-    PImage no_sound;
-
     public void setup() {
 
 	frameRate(25);
 	setupFont();
+
+	game_state.scene_type = prefs.getInt("scene_type", HOME);
+	game_state.cur_scene = prefs.getInt("cur_scene", 0);
+	initialize();
+	game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
+	setScene();
+	loaded++;
     }
 
     public void draw() {
-	if (loaded == 0) {
-	    drawLoading();
-	    loaded++;
-	} else if (loaded == 1) {
-	    initialize();
-	    game_state.scene_type = HOME;
-	    game_state.cur_scene = 0;
-	    game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
-	    setScene();
-	    loaded++;
-	} else {
-	    // Display objects (during normal workflow).
-	    if (game_state.dont_draw <= 0) {
-		displayScene();
-		displaySprites();
 
-		tint(255, 255);
-		avatar.display();
+	// Display objects (during normal workflow).
+	if (game_state.dont_draw <= 0) {
+	    displayScene();
+	    displaySprites();
 
-		displayText();
-		if (!sound)
-		    image(no_sound, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
-		else
-		    image(sound_im, win_x, win_height + win_y - sound_ico_size, sound_ico_size, sound_ico_size);
+	    tint(255, 255);
+	    avatar.display();
 
-		// Cover the overlaping areas with black
-		if (win_x != 0) {
-		    fill(0, 255);
-		    rect(0, 0, win_x, win_height);
-		    rect(win_x + win_width, 0, win_x, win_height);
-		} else if (win_y != 0) {
-		    fill(0, 255);
-		    rect(0, 0, win_width, win_y);
-		    rect(0, win_y + win_height, win_width, win_y);
-		}
-	    } else {
-		--game_state.dont_draw;
+	    displayText();
+
+	    // Cover the overlaping areas with black
+	    if (win_x != 0) {
+		fill(0, 255);
+		rect(0, 0, win_x, win_height);
+		rect(win_x + win_width, 0, win_x, win_height);
+	    } else if (win_y != 0) {
+		fill(0, 255);
+		rect(0, 0, win_width, win_y);
+		rect(0, win_y + win_height, win_width, win_y);
 	    }
-	    reactToEvents();
-	    controlFading();
-
-	    game_state.frame++;
+	} else {
+	    --game_state.dont_draw;
 	}
+	reactToEvents();
+	controlFading();
+
+	game_state.frame++;
     }
 
     // React to environment, if the workflow is not blocked.
@@ -141,7 +146,7 @@ public class AProtester extends PApplet {
 	    if (game_state.to_end-- > 0) {
 		showEnd();
 	    }
-	    
+
 	    if (game_state.finished && mousePressed)
 		finish();
 	}
@@ -149,14 +154,7 @@ public class AProtester extends PApplet {
 
     // React to mouse input (button is pressed event).
     public void reactToMouse() {
-	if (mouseX > win_x && mouseX < (win_x + sound_ico_size) && mouseY < win_height + win_y && mouseY > win_height + win_y - sound_ico_size) {
-	    // Switch the sound
-	    sound = !sound;
-	    if (sound) {
-		media_player.start();
-	    } else
-		media_player.pause();
-	} else if (avatar.isRightFrom(mouseX)) {
+	if (avatar.isRightFrom(mouseX)) {
 	    // Move
 	    avatar.startAnim(1);
 	    game_state.blocked = avatar.getCount();
@@ -195,8 +193,6 @@ public class AProtester extends PApplet {
     final int FOLLOW_START = 70;
     final int FOLLOW_UP = 50;
 
-    float sound_ico_size = 0.0f;
-
     // Change the size based on resolution.
     public void initDimensions() {
 	if ((float) width / (float) height < (float) PURPOSED_WIDTH / (float) PURPOSED_HEIGHT) {
@@ -214,7 +210,6 @@ public class AProtester extends PApplet {
 	println(ratio + " " + win_x + " " + win_y + " " + win_width + " " + win_height);
 	font_size = Math.round((float) PURPOSED_FONT_SIZE * ratio);
 	font_line = win_y + Math.round(win_height * 1.0f / 6.0f) - font_size;
-	sound_ico_size = Math.round(50 * ratio);
     }
 
     public void drawLoading() {
@@ -277,7 +272,7 @@ public class AProtester extends PApplet {
 	fill(MIST_COL, 255);
 	rect(0, 0, win_width + win_x * 2, win_height + win_y * 2);
 	game_state.cur_scene++;
-	game_state.background = loadImage(scenes.get(game_state.cur_scene).background); 
+	game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
 	game_state.scene_type = APPROACH;
 	setScene();
 	game_state.to_visible = SECOND * 6;
@@ -290,6 +285,9 @@ public class AProtester extends PApplet {
 	    rect(win_x, win_y, win_width, win_height);
 	    if (--game_state.to_change <= 0) {
 		game_state.cur_scene++;
+		edit.putInt("scene_type", game_state.scene_type);
+		edit.putInt("cur_scene", game_state.cur_scene);
+		edit.apply();
 		game_state.background = loadImage(scenes.get(game_state.cur_scene).background);
 		setScene();
 		game_state.to_begin = SECOND;
@@ -352,9 +350,6 @@ public class AProtester extends PApplet {
 	initBystanders();
 	walk = new Animation("walk", 20);
 	walkw = new Animation("walkw", 20);
-	sound_im = loadImage("sound.png");
-	no_sound = loadImage("nosound.png");
-	sound = true;
     }
 
     public void setupFont() {
@@ -659,11 +654,8 @@ public class AProtester extends PApplet {
 	avatar.move(-226.0f, -78.0f, 3.0f, 1.25f);
 	game_state.blocked = SECOND * 7;
 	game_state.to_mist = SECOND * 7;
-	if (sound) {
-	    MediaPlayer shot_player;
-	    shot_player = MediaPlayer.create(getApplicationContext(), R.raw.gun2);
-	    shot_player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-	    shot_player.start();
+	if (prefs.getBoolean("sound", false)) {
+	    shot_sound_player.start();
 	}
     }
 

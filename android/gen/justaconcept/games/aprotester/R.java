@@ -11,6 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int button_active=0x7f060002;
         public static final int button_bg=0x7f060000;
         public static final int button_font=0x7f060001;
     }
@@ -57,6 +58,7 @@ public final class R {
     public static final class string {
         public static final int continue_button=0x7f070003;
         public static final int copyright=0x7f070009;
+        public static final int description=0x7f07000a;
         public static final int exit_button=0x7f070002;
         public static final int game_name=0x7f070007;
         public static final int jac_logo=0x7f070008;

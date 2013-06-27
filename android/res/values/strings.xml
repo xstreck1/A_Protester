@@ -1,7 +1,7 @@
 <resources>
-    <string name="title_activity_start_screen">StartScreen</string>
+    <string name="title_activity_start_screen">A Prosteter</string>
     
-    <string name="start_button">NEW</string>
+    <string name="start_button">PLAY</string>
     <string name="exit_button">EXIT</string>
     <string name="continue_button">CONTINUE</string>
     <string name="story_button">STORY</string>
@@ -9,7 +9,8 @@
     <string name="sound_toggle_on">SOUND ON</string>
     <string name="game_name">A Protester</string>
     <string name="jac_logo">Just A Concept Logotype</string>
-    <string name="copyright">2013 Just A Concept Game</string>
+    <string name="copyright">Just A Concept Game, CC BY-NC, 2013 </string>
+    <string name="description">A short interactive story inspired by the Turkish uprising. \nMove by touch. \n \n -Music by Xerferic \n -Photos from occupygezi \n -Sounds from FreeSound</string>
     
     
 

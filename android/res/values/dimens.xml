@@ -9,8 +9,9 @@
     <dimen name="button_padding">10dp</dimen>
     
     
-    <color name="button_bg">#AA000000</color>
-    <color name="button_font">#CCCCCC</color>
+    <color name="button_bg">#AE000000</color>
+    <color name="button_font">#BBBBBB</color>
+    <color name="button_active">#FFFFFF</color>
     
 
 </resources>

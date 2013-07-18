@@ -1,121 +1,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/appbg"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".StartScreen" >
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/appbg"
+              android:gravity="center_horizontal"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context=".StartScreen"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0"
-        android:baselineAligned="false"
-        android:orientation="horizontal" >
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin" >
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin" >
 
             <Button
-                android:id="@+id/button1"
-                android:onClick="startNewGame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/button_margin_top"
-                android:background="@color/button_bg"
-                android:padding="@dimen/button_padding"
-                android:text="@string/start_button"
-                android:textColor="@color/button_font"  />
+                    android:id="@+id/button1"
+                    android:onClick="startNewGame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_margin_top"
+                    android:background="@color/button_bg"
+                    android:padding="@dimen/button_padding"
+                    android:text="@string/start_button"
+                    android:textColor="@color/button_font"  />
+
+            <Button
+                    android:id="@+id/button2"
+                    android:onClick="continueGame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_margin_top"
+                    android:background="@color/button_bg"
+                    android:padding="@dimen/button_padding"
+                    android:text="@string/continue_button"
+                    android:textColor="@color/button_font"  />
 
             <ToggleButton
-                android:id="@+id/togglebutton"
-                android:onClick="onToggleClicked"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/button_margin_top"
-                android:background="@color/button_bg"
-                android:padding="@dimen/button_padding"
-                android:textColor="@color/button_font" 
-                android:textOff="@string/sound_toggle_off"
-                android:textOn="@string/sound_toggle_on" />
+                    android:id="@+id/togglebutton"
+                    android:onClick="onToggleClicked"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_margin_top"
+                    android:background="@color/button_bg"
+                    android:padding="@dimen/button_padding"
+                    android:textColor="@color/button_font"
+                    android:textOff="@string/sound_toggle_off"
+                    android:textOn="@string/sound_toggle_on" />
 
             <Button
-                android:id="@+id/button3"
-                android:onClick="finishGame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/button_margin_top"
-                android:background="@color/button_bg"
-                android:padding="@dimen/button_padding"
-                android:text="@string/exit_button"
-                android:textColor="@color/button_font" />
+                    android:id="@+id/button3"
+                    android:onClick="finishGame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_margin_top"
+                    android:background="@color/button_bg"
+                    android:padding="@dimen/button_padding"
+                    android:text="@string/exit_button"
+                    android:textColor="@color/button_font" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin" >
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin" >
 
             <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="20dp"
-                android:text="@string/game_name"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:text="@string/game_name"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textStyle="bold"
+                    android:typeface="sans" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/description"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
 
         <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:contentDescription="@string/jac_logo"
-            android:src="@drawable/logo" />
+                android:id="@+id/imageView1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/jac_logo"
+                android:src="@drawable/logo" />
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:text="@string/copyright"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp"
+                android:text="@string/copyright"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
 </LinearLayout>

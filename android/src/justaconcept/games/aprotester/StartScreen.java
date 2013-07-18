@@ -32,6 +32,15 @@ public class StartScreen extends Activity {
     
     public void startNewGame(View view) {
 	((TextView) view).setTextColor(getResources().getColor(R.color.button_active));
+	edit.putInt("scene_type", AProtester.HOME);
+	edit.putInt("cur_scene", 0);
+	edit.apply();
+	Intent new_game_intent = new Intent(this, AProtester.class);
+	startActivity(new_game_intent);
+    }
+    
+    public void continueGame(View view) {
+	((TextView) view).setTextColor(getResources().getColor(R.color.button_active));
 	Intent new_game_intent = new Intent(this, AProtester.class);
 	startActivity(new_game_intent);
     }

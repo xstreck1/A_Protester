@@ -37,7 +37,11 @@ local.properties
 *jni/*
 *libs/*
 *obj/*
-AndroidMnifest.xml
+*/out*
+*/.idea*
+*log
+*iml
+*AndroidMnifest.xml
 sketch.properties
 
 #################

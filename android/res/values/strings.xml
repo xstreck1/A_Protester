@@ -1,9 +1,9 @@
 <resources>
     <string name="title_activity_start_screen">A Prosteter</string>
     
-    <string name="start_button">PLAY</string>
+    <string name="start_button">NEW GAME</string>
+    <string name="continue_button">CONTINUE</string>    
     <string name="exit_button">EXIT</string>
-    <string name="continue_button">CONTINUE</string>
     <string name="story_button">STORY</string>
     <string name="sound_toggle_off">SOUND OFF</string>
     <string name="sound_toggle_on">SOUND ON</string>
